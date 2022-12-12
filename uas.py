@@ -10,50 +10,42 @@ from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
-# import warnings
-# warnings.filterwarnings("ignore")
-
 
 st.title("PENAMBANGAN DATA")
 st.write("##### Nama  :  ")
 st.write("##### Nim   :  ")
 st.write("##### Kelas :  ")
 
+#Navbar
 data_set_description, upload_data, preprocessing, modeling, implementation = st.tabs(["Data Set Description", "Upload Data", "Preprocessing", "Modeling", "Implementation"])
 
+df = pd.read_csv('https://raw.githubusercontent.com/davata1/Datamining/main/final_test.csv')
+
+#data_set_description
 with data_set_description:
-    st.write("""# Data Set Description """)
     st.write("###### Data Set Ini Adalah : Weather Prediction (Prediksi Cuaca) ")
     st.write("###### Sumber Data Set dari Kaggle : https://www.kaggle.com/datasets/ananthr1/weather-prediction")
-    st.write("""###### Penjelasan setiap kolom : """)
     st.write("""1. preciptation (curah hujan) :
-
     Curah hujan : jumlah hujan yang turun pada suatu daerah dalam waktu tertentu. untuk menentukan besarnya curah hujan, membutuhkan suatu alat ukur. Alat pengukur curah hujan disebut dengan fluviograf dan satuan curah hujan yang biasanya digunakan adalah milimeter (mm).
     """)
     st.write("""2. tempmax (suhu maks) :
-
     Suhu Maksimum : Suhu yang terbaca dari termometer maksimum di ada di dataset
     """)
     st.write("""3. tempmin (suhu min) :
-
     Suhu Minimum : Suhu yang terbaca dari termometer minimum di ada di dataset
     """)
     st.write("""4. wind (angin) :
-
     Kecepatan angin disebabkan oleh pergerakan angin dari tekanan tinggi ke tekanan rendah, biasanya karena perubahan suhu
     """)
     st.write("""5. weather (cuaca) :
-
     Output (keluaran)
     """)
     st.write("""Menggunakan Kolom (input) :
-
     precipitation
     tempmax * tempmin
     wind
     """)
     st.write("""Memprediksi kondisi cuaca (output) :
-
     1. drizzle (gerimis)
     2. rain (hujan)
     3. sun (matahari)
@@ -63,15 +55,17 @@ with data_set_description:
     st.write("###### Aplikasi ini untuk : Weather Prediction (Prediksi Cuaca) ")
     st.write("###### Source Code Aplikasi ada di Github anda bisa acces di link : ")
 
+#Uploud data
 with upload_data:
-    # uploaded_files = st.file_uploader("Upload file CSV", accept_multiple_files=True)
-    # for uploaded_file in uploaded_files:
-    #     df = pd.read_csv(uploaded_file)
-    #     st.write("Nama File Anda = ", uploaded_file.name)
-    #     st.dataframe(df)
-    df = pd.read_csv('https://raw.githubusercontent.com/davata1/Datamining/main/final_test.csv')
-    st.dataframe(df)
+    uploaded_files = st.file_uploader("Upload file CSV", accept_multiple_files=True)
+    for uploaded_file in uploaded_files:
+        df = pd.read_csv(uploaded_file)
+        st.write("Nama File Anda = ", uploaded_file.name)
+        # view dataset asli
+        st.header("Dataset")
+        st.dataframe(df)
 
+#Preprocessing
 with preprocessing:
     st.subheader("""Normalisasi Data""")
     st.write("""Rumus Normalisasi Data :""")
@@ -82,12 +76,9 @@ with preprocessing:
     - min = nilai minimum semua data asli
     - max = nilai maksimum semua data asli
     """)
-    # df = df.drop(columns=["date"])
     #Mendefinisikan Varible X dan Y
     X = df.drop(columns=['size'])
     y = df['size'].values
-    df
-    X
     df_min = X.min()
     df_max = X.max()
     
@@ -112,15 +103,12 @@ with preprocessing:
         '2' : [dumies[1]],
         '3' : [dumies[2]],
         '4' : [dumies[3]],
-        '5' : [dumies[4]],
-        '6' : [dumies[5]],
-        '7' : [dumies[6]],
-        '8' : [dumies[7]],
-        '9' : [dumies[8]]
+        '5' : [dumies[4]]
     })
 
     st.write(labels)
 
+#Modelling
 with modeling:
     training, test = train_test_split(scaled_features,test_size=0.2, random_state=1)#Nilai X training dan Nilai X testing
     training_label, test_label = train_test_split(y, test_size=0.2, random_state=1)#Nilai Y training dan Nilai Y testing
@@ -190,22 +178,25 @@ with modeling:
                 .interactive()
             )
             st.altair_chart(chart,use_container_width=True)
-  
+
+#Implementasi
 with implementation:
     with st.form("my_form"):
         st.subheader("Implementasi")
-        Weight = st.number_input('Masukkan weight : ')
-        Age = st.number_input('Masukkan age : ')
-        Height = st.number_input('Masukkan height : ')
+        Precipitation = st.number_input('Masukkan preciptation (curah hujan) : ')
+        Temp_Max = st.number_input('Masukkan tempmax (suhu maks) : ')
+        Temp_Min = st.number_input('Masukkan tempmin (suhu min) : ')
+        Wind = st.number_input('Masukkan wind (angin) : ')
         model = st.selectbox('Pilihlah model yang akan anda gunakan untuk melakukan prediksi?',
                 ('Gaussian Naive Bayes', 'K-NN', 'Decision Tree'))
 
         prediksi = st.form_submit_button("Submit")
         if prediksi:
             inputs = np.array([
-                Weight,
-                Age,
-                Height
+                Precipitation,
+                Temp_Max,
+                Temp_Min,
+                Wind
             ])
 
             df_min = X.min()
@@ -221,7 +212,6 @@ with implementation:
                 mod = dt
 
             input_pred = mod.predict(input_norm)
-
 
             st.subheader('Hasil Prediksi')
             st.write('Menggunakan Pemodelan :', model)
