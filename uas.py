@@ -15,9 +15,9 @@ from sklearn.tree import DecisionTreeClassifier
 
 
 st.title("PENAMBANGAN DATA")
-st.write("##### Nama  : Hambali Fitrianto ")
-st.write("##### Nim   : 200411100074 ")
-st.write("##### Kelas : Penambangan Data C ")
+st.write("##### Nama  :  ")
+st.write("##### Nim   :  ")
+st.write("##### Kelas :  ")
 
 data_set_description, upload_data, preprocessing, modeling, implementation = st.tabs(["Data Set Description", "Upload Data", "Preprocessing", "Modeling", "Implementation"])
 
@@ -113,9 +113,7 @@ with preprocessing:
         '2' : [dumies[1]],
         '3' : [dumies[2]],
         '4' : [dumies[3]],
-        '5' : [dumies[4]],
-        '6' : [dumies[5]],
-        '7' : [dumies[6]]
+        '5' : [dumies[4]]
     })
 
     st.write(labels)
