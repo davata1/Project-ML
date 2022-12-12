@@ -61,8 +61,7 @@ with data_set_description:
     5. fog (kabut)
     """)
     st.write("###### Aplikasi ini untuk : Weather Prediction (Prediksi Cuaca) ")
-    st.write("###### Source Code Aplikasi ada di Github anda bisa acces di link : https://github.com/HambaliFitrianto/Aplikasi-Web-Data-Mining-Weather-Prediction ")
-    st.write("###### Untuk Wa saya anda bisa hubungi nomer ini : http://wa.me/6282138614807 ")
+    st.write("###### Source Code Aplikasi ada di Github anda bisa acces di link : ")
 
 with upload_data:
     # uploaded_files = st.file_uploader("Upload file CSV", accept_multiple_files=True)
@@ -113,7 +112,11 @@ with preprocessing:
         '2' : [dumies[1]],
         '3' : [dumies[2]],
         '4' : [dumies[3]],
-        '5' : [dumies[4]]
+        '5' : [dumies[4]],
+        '6' : [dumies[5]],
+        '7' : [dumies[6]],
+        '8' : [dumies[7]],
+        '9' : [dumies[8]]
     })
 
     st.write(labels)
