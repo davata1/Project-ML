@@ -69,7 +69,7 @@ with upload_data:
     #     df = pd.read_csv(uploaded_file)
     #     st.write("Nama File Anda = ", uploaded_file.name)
     #     st.dataframe(df)
-    df = pd.read_csv('https://raw.githubusercontent.com/davata1/Project-Pendat/main/final_test.csv')
+    df = pd.read_csv('https://raw.githubusercontent.com/davata1/Datamining/main/final_test.csv')
     st.dataframe(df)
 
 with preprocessing:
