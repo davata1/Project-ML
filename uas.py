@@ -99,12 +99,12 @@ with preprocessing:
     dumies = np.array(dumies)
 
     labels = pd.DataFrame({
-        '1' : [dumies[0]],
-        '2' : [dumies[1]],
-        '3' : [dumies[2]],
-        '4' : [dumies[3]],
-        '5' : [dumies[4]],
-        '6' : [dumies[5]]
+        'S' : [dumies[0]],
+        'M' : [dumies[1]],
+        'L' : [dumies[2]],
+        'XXS' : [dumies[3]],
+        'Xl' : [dumies[4]],
+        'XXXL' : [dumies[5]]
     })
 
     st.write(labels)
