@@ -16,7 +16,7 @@ button=st.button('Hasil Prediksi')
 
 if button:
     # Download resources
-    nltk.download('popular')
+    nltk.download('punkt')
     nltk.download('stopwords')
 
     # Load dataset
