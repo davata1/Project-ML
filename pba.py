@@ -84,7 +84,7 @@ if button :
         predictions = asknn.predict(hastfidf)
         for i in predictions:
             st.write('Text : ',analisis)
-            st.write('Sentimen :', i)
+            st.write('Sentimenm :', i)
         #Menampilkan hasil prediksi
         #sentiment = asknn.predict(cosim)
         #st.write("Sentimen:", sentiment)
