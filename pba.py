@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import string
 import re
+import scipy.sparse as sp
 from PIL import Image
 
 logo = Image.open('covid.jpg')
@@ -12,6 +13,14 @@ text = st.text_input("Masukkan teks")
 button = st.button("Hasil Prediiksi")
 
 if button:
+    # Download rexource
+    import nltk
+    from nltk.corpus import stopwords
+    from nltk.tokenize import word_tokenize
+    nltk.download("punkt")
+    nltk.download("stopwords")
+    
+
     # membaca data
     df = pd.read_csv("https://github.com/davata1/pba/blob/main/covid.csv")
 
@@ -43,12 +52,6 @@ if button:
         text = re.sub("nan", "", text)
 
         # Menghapus kata-kata yang tidak bermakna (stopwords)
-        # Download rexource
-        import nltk
-        from nltk.corpus import stopwords
-        from nltk.tokenize import word_tokenize
-        nltk.download("punkt")
-        nltk.download("stopwords")
         stop_words = set(stopwords.words("Indonesian"))
         tokens = [token for token in tokens if token not in stop_words]
 
