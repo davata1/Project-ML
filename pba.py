@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import string
 import re
-from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from PIL import Image
 
 logo = Image.open('covid.jpg')
@@ -13,12 +12,12 @@ text = st.text_input("Masukkan teks")
 button = st.button("Hasil Prediiksi")
 
 if button:
+    from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+
+    # Download rexource
     import nltk
     from nltk.corpus import stopwords
     from nltk.tokenize import word_tokenize
-   
-
-    # Download rexource
     nltk.download("punkt")
     nltk.download("stopwords")
     
