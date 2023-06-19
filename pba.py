@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import string
 import re
+from PIL import Image
+
+logo = Image.open('https://img.freepik.com/free-vector/person-fighting-virus-illustrated_52683-35833.jpg?size=626&ext=jpg&ga=GA1.2.914826625.1687207747&semt=ais')
+st.image(logo, caption='')
 
 st.title("Prediksi tweettt covid 19")
 text = st.text_input("Masukkan teks")
