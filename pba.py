@@ -43,17 +43,29 @@ if button :
         
         # Mendefinisikan fungsi pra-pemrosesan
         def preprocess_text(text):
-            # Menghilangkan karakter yang tidak diinginkan
-            text = text.strip(" ")
-            text = re.sub(r'[^a-zA-Z0-9\s]', ' ', text)
-            text = re.sub(r'[?|$|.|!_:")(-+,]', ' ', text)
-            text = re.sub(r'\d+', ' ', text)
-            text = re.sub(r"\b[a-zA-Z]\b", " ",text)
-            text = re.sub('\s+',' ', text)
-            text = normalize_typo(text)
-            # Tokenisasi teks menjadi kata-kata
-            tokens = word_tokenize(text)
-            
+           # HTML Tag Removal
+            text = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});').sub('', str(text))
+
+            # Case folding
+            text = text.lower()
+
+            # Trim text
+            text = text.strip()
+
+            # Remove punctuations, karakter spesial, and spasi ganda
+            text = re.compile('<.*?>').sub('', text)
+            text = re.compile('[%s]' % re.escape(string.punctuation)).sub(' ', text)
+            text = re.sub('\s+', ' ', text)
+
+            # Number removal
+            text = re.sub(r'\[[0-9]*\]', ' ', text)
+            text = re.sub(r'[^\w\s]', '', str(text).lower().strip())
+            text = re.sub(r'\d', ' ', text)
+            text = re.sub(r'\s+', ' ', text)
+
+            # Mengubah text 'nan' dengan whitespace agar nantinya dapat dihapus
+            text = re.sub('nan', '', text)
+
             # Menghapus kata-kata yang tidak bermakna (stopwords)
             stop_words = set(stopwords.words('Indonesian'))
             tokens = [token for token in tokens if token not in stop_words]
@@ -80,8 +92,8 @@ if button :
             vectoriz= pickle.load(f)    
         
         
-        hastfidf=vectoriz.transform([analisis])
-        predictions = asknn.predict(hastfidf)
+        tf=vectoriz.transform([analisis])
+        predictions = asknn.predict(tf)
         for i in predictions:
             st.write('Text : ',analisis)
             st.write('Sentimenm :', i)
