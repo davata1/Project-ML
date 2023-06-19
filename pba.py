@@ -12,8 +12,6 @@ text = st.text_input("Masukkan teks")
 button = st.button("Hasil Prediiksi")
 
 if button:
-    from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-
     # Download rexource
     import nltk
     from nltk.corpus import stopwords
@@ -60,6 +58,7 @@ if button:
         processed_text = " ".join(tokens)
 
         # Melakukan stemming pada teks menggunakan PySastrawi
+        from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
         factory = StemmerFactory()
         stemmer = factory.create_stemmer()
         stemmed_text = stemmer.stem(processed_text)
