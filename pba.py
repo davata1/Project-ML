@@ -18,7 +18,7 @@ if button :
         import re
 
         # Menginisialisasi Streamlit
-        #st.title("Preprocessing pada Teks")
+        #st.title("Preprocessing pada Teks"
 
         # Mengaktifkan resource NLTK yang diperlukan
         nltk.download('punkt')
