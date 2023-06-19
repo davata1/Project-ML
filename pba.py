@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import string
 import re
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from PIL import Image
 
 logo = Image.open('covid.jpg')
@@ -15,17 +16,15 @@ if button:
     import nltk
     from nltk.corpus import stopwords
     from nltk.tokenize import word_tokenize
-    # Menginisialisasi Streamlit
-    # st.title("Preprocessing pada Teks"
+   
 
-    # Mengaktifkan resource NLTK yang diperlukan
+    # Download rexource
     nltk.download("punkt")
     nltk.download("stopwords")
-    from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+    
 
-    # Membaca kamus dari file Excel
+    # membaca data
     df = pd.read_csv("https://github.com/davata1/pba/blob/main/covid.csv")
-    # Mengubah kamus menjadi dictionary
 
     # Mendefinisikan fungsi pra-pemrosesan
     def preprocess_text(text):
@@ -85,7 +84,5 @@ if button:
     predictions = asknn.predict(tf)
     for i in predictions:
         st.write("Text : ", analisis)
-        st.write("Sentimenm :", i)
-    # Menampilkan hasil prediksi
-    # sentiment = asknn.predict(cosim)
-    # st.write("Sentimen:", sentiment)
+        st.write("Sentimenm analisis :", i)
+    
