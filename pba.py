@@ -5,7 +5,7 @@ import re
 import scipy.sparse as sp
 from PIL import Image
 
-logo = Image.open('covid.jpg')
+logo = Image.open('ikao.jpg')
 st.image(logo, caption='')
 
 st.title("Prediksi tweettt covid 19")
