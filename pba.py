@@ -44,6 +44,7 @@ if button:
         # Mengubah text 'nan' dengan whitespace agar nantinya dapat dihapus
         text = re.sub("nan", "", text)
         # Menghapus kata-kata yang tidak bermakna (stopwords)
+        tokens = word_tokenize(text)
         stop_words = set(stopwords.words("Indonesian"))
         tokens = [token for token in tokens if token not in stop_words]
         # Menggabungkan kata-kata kembali menjadi teks yang telah dipreprocessed
