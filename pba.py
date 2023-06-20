@@ -44,11 +44,11 @@ if button:
         # Mengubah text 'nan' dengan whitespace agar nantinya dapat dihapus
         text = re.sub("nan", "", text)
         # Menghapus kata-kata yang tidak bermakna (stopwords)
-        tokens = word_tokenize(text)
+        token = word_tokenize(text)
         stop_words = set(stopwords.words("Indonesian"))
-        tokens = [token for token in tokens if token not in stop_words]
+        token = [token for token in token if token not in stop_words]
         # Menggabungkan kata-kata kembali menjadi teks yang telah dipreprocessed
-        processed_text = " ".join(tokens)
+        processed_text = " ".join(token)
         # Melakukan stemming pada teks menggunakan PySastrawi
         from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
         factory = StemmerFactory()
@@ -62,15 +62,15 @@ if button:
     # st.write(analisis)
 
     import pickle
-    with open("modelKNNrill.pkl", "rb") as r:
-        asknn = pickle.load(r)
+    with open("modelKNNrill.pkl", "rb") as f:
+        knn = pickle.load(f)
     import pickle
-    with open("tfidf.pkl", "rb") as f:
-        vectoriz = pickle.load(f)
+    with open("tfidf.pkl", "rb") as r:
+        vectoriz = pickle.load(r)
 
     tf = vectoriz.transform([analisis])
-    predictions = asknn.predict(tf)
-    for i in predictions:
+    predictions = knn.predict(tf)
+    for sentimen in predictions:
         st.write("Text : ", analisis)
-        st.write("Sentimenm analisis :", i)
+        st.write("Sentimenm analisis :", sentimen)
     
