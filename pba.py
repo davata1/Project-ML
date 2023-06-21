@@ -8,7 +8,7 @@ from PIL import Image
 logo = Image.open('ikao.jpg')
 st.image(logo, caption='')
 
-st.title("Prediksi tweettt covid 19")
+st.title("Prediksi tweett covid 19")
 text = st.text_input("Masukkan teks")
 button = st.button("Hasil Prediiksi")
 
