@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
@@ -11,15 +10,17 @@ from sklearn.metrics import mean_squared_error, r2_score
 # Load dataset
 df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
 
-# Konversi data Tahun menjadi numerik
-df['Tahun'] = pd.to_numeric(df['Tahun'])
-
 # Streamlit app
 st.title("Aplikasi Prediksi Produksi Cabe")
 
 # Tampilkan dataset
 st.subheader("Dataset Produksi Cabe")
 st.dataframe(df)
+
+# Menampilkan total produksi cabai per provinsi
+total_produksi = df.groupby('Provinsi')['Produksi'].sum()
+st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
+st.write(total_produksi)
 
 # Tampilkan grafik produksi per provinsi
 st.subheader("Grafik Produksi Cabe per Provinsi")
@@ -64,6 +65,22 @@ if st.button("Prediksi Produksi Tahun Berikutnya"):
     st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi} di Tahun {tahun_prediksi}:")
     st.write(f'Produksi: {y_prediksi[0]:.2f}')
 
+    # Menambahkan prediksi untuk tahun 2024
+    prediksi = {}
+    for prov in provinsi:
+        # Menggunakan data yang sama untuk prediksi
+        prediksi[prov] = model.predict(scaler.transform(pd.DataFrame({'Tahun': [tahun_prediksi]})))[0]
+
+    # Tampilkan grafik dengan prediksi
+    plt.figure(figsize=(10, 6))
+    plt.bar(provinsi, [prediksi[prov] for prov in provinsi], color='blue', alpha=0.6, label='Prediksi 2024')
+    plt.xlabel('Provinsi')
+    plt.ylabel('Produksi Cabe')
+    plt.title('Prediksi Produksi Cabe per Provinsi untuk Tahun 2024')
+    plt.xticks(rotation=90)
+    plt.legend()
+    st.pyplot(plt)
+
 # Evaluasi model (hanya untuk informasi)
 if st.button("Evaluasi Model"):
     all_y_test = [tahun_terakhir_1, tahun_terakhir_2, tahun_terakhir_3]
@@ -78,7 +95,7 @@ if st.button("Evaluasi Model"):
     st.write(f'RMSE: {rmse:.2f}')  
     st.write(f'R-squared: {r_squared:.2f}')
 
-# Menampilkan total produksi cabai per provinsi
-total_produksi = df.groupby('Provinsi')['Produksi'].sum()
-st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
-st.write(total_produksi)
+# Print hasil prediksi untuk tahun 2024
+st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024:")
+for prov in provinsi:
+    st.write(f'{prov}: {prediksi[prov]:.2f}')
