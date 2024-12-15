@@ -17,18 +17,18 @@ preprocessing = st.sidebar("Preprocessing")
 
 
 # Deskripsi
-if description:
+with description:
     st.write("###### Data Set : Human Stress Detection in and through Sleep - Deteksi Stres Manusia di dalam dan melalui Tidur")
     st.write("###### Sumber Data Set dari Kaggle : https://www.kaggle.com/datasets/laavanya/human-stress-detection-in-and-through-sleep?select=SaYoPillow.csv")
 
 # Upload Data
-if upload_data:
+with upload_data:
     st.write("###### DATASET YANG DIGUNAKAN")
     df = pd.read_csv('https://raw.githubusercontent.com/davata1/Project-Pendat/main/SaYoPillow.csv')
     st.dataframe(df)
 
 # Preprocessing
-if preprocessing:
+with preprocessing:
     st.subheader("Normalisasi Data")
     st.write("Rumus Normalisasi Data :")
     st.image('https://i.stack.imgur.com/EuitP.png', use_column_width=False, width=250)
