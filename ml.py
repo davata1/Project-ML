@@ -23,7 +23,7 @@ st.title("PENAMBANGAN DATA")
 st.write("##### Nama  : Dhafa Febriyan Wiranata  ")
 st.write("##### Nim   : 200411100169 ")
 st.write("##### Kelas : Penambangan Data B ")
-description, upload_data, preporcessing, modeling, implementation = st.tab(["Description", "Upload Data", "Prepocessing", "Modeling", "Implementation"])
+description, upload_data, preporcessing, modeling, implementation = st.tabs(["Description", "Upload Data", "Prepocessing", "Modeling", "Implementation"])
 
 with description:
     st.write("###### Data Set : Human Stress Detection in and through Sleep - Deteksi Stres Manusia di dalam dan melalui Tidur ")
