@@ -11,9 +11,9 @@ st.write("##### Kelas : Penambangan Data B")
 
 # Sidebar untuk navigasi
 st.sidebar.title("Navigasi")
-description = st.sidebar.button("Description")
-upload_data = st.sidebar.button("Upload Data")
-preprocessing = st.sidebar.button("Preprocessing")
+description = st.sidebar("Description")
+upload_data = st.sidebar("Upload Data")
+preprocessing = st.sidebar("Preprocessing")
 
 
 # Deskripsi
