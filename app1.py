@@ -21,9 +21,14 @@ with kategori[0]:
     st.dataframe(df)
 
 with kategori[1]:
-    st.subheader("Grafik Produksi Cabe per Provinsi")
+   st.subheader("Grafik Produksi Cabe per Provinsi")
     plt.figure(figsize=(10, 6))
     sns.barplot(x='Provinsi', y='Produksi', data=df)
+    plt.xticks(rotation=90)
+    plt.xlabel('Provinsi')
+    plt.ylabel('Produksi')
+    plt.title('Produksi Cabe per Provinsi dari Tahun 2003-2023')
+    st.pyplot(plt)
     
 
 with kategori[2]:
