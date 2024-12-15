@@ -24,8 +24,7 @@ with kategori[1]:
     st.subheader("Grafik Produksi Cabe per Provinsi")
     plt.figure(figsize=(10, 6))
     sns.barplot(x='Provinsi', y='Produksi', data=df)
-    plt.xticks(rotation=90)
-    st.pyplot(plt)
+    
 
 with kategori[2]:
     st.subheader("Prediksi Produksi Cabe")
