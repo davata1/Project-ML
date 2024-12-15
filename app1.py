@@ -108,7 +108,7 @@ with kategori[3]:
         X = province_data[['Tahun']]
         y = province_data['Produksi']
 
-                # Normalisasi data
+        # Normalisasi data
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
 
@@ -128,7 +128,7 @@ with kategori[3]:
 
     # Evaluasi model
     mse = mean_squared_error(all_y_test, all_y_pred)  # Hitung MSE
-    rmse = mean_squared_error(all_y_test, all_y_pred, squared=False)  # Hitung RMSE
+    rmse = np.sqrt(mse)  # Calculate RMSE from MSE
     r_squared = r2_score(all_y_test, all_y_pred)  # Hitung R-squared
 
     st.write(f'MSE: {mse:.2f}')  
