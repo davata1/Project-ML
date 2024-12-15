@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
 
 # Load dataset
-df = pd.read_csv('/content/drive/MyDrive/kuliah/data/Produksi Tanaman Cabe.csv')
+df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
 
 # Konversi data Tahun menjadi numerik
 df['Tahun'] = pd.to_numeric(df['Tahun'])
