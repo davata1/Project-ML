@@ -13,14 +13,14 @@ df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Prod
 # Streamlit app
 st.title("Aplikasi Prediksi Produksi Cabe")
 
-# Kategori dengan radio button
-kategori = st.radio("Pilih Kategori:", ("Dataset", "Grafik", "Prediksi", "Evaluasi"))
+# Kategori dengan tabs
+kategori = st.tabs(["Dataset", "Grafik", "Prediksi", "Evaluasi"])
 
-if kategori == "Dataset":
+with kategori[0]:
     st.subheader("Dataset Produksi Cabe")
     st.dataframe(df)
 
-elif kategori == "Grafik":
+with kategori[1]:
     st.subheader("Grafik Produksi Cabe per Provinsi")
     plt.figure(figsize=(10, 6))
     sns.barplot(x='Provinsi', y='Produksi', data=df)
@@ -30,7 +30,7 @@ elif kategori == "Grafik":
     plt.title('Produksi Cabe per Provinsi dari Tahun 2003-2023')
     st.pyplot(plt)
 
-elif kategori == "Prediksi":
+with kategori[2]:
     st.subheader("Prediksi Produksi Cabe")
     provinsi = df['Provinsi'].unique()
     selected_provinsi = st.selectbox("Pilih Provinsi", provinsi)
@@ -64,7 +64,7 @@ elif kategori == "Prediksi":
         st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi} di Tahun {tahun_prediksi}:")
         st.write(f'Produksi: {y_prediksi[0]:.2f}')
 
-elif kategori == "Evaluasi":
+with kategori[3]:
     st.subheader("Evaluasi Model")
     all_y_test = [tahun_terakhir_1, tahun_terakhir_2, tahun_terakhir_3]
     all_y_pred = [y_prediksi[0]]  # Hanya satu prediksi
