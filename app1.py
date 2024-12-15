@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
@@ -11,16 +10,14 @@ from sklearn.metrics import mean_squared_error, r2_score
 # Load dataset
 df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
 
-
-
 # Streamlit app
 st.title("Aplikasi Prediksi Produksi Cabe")
 
-# Tampilkan dataset
+# 1. Dataset
 st.subheader("Dataset Produksi Cabe")
 st.dataframe(df)
 
-# Tampilkan grafik produksi per provinsi
+# 2. Grafik
 st.subheader("Grafik Produksi Cabe per Provinsi")
 plt.figure(figsize=(10, 6))
 sns.barplot(x='Provinsi', y='Produksi', data=df)
@@ -30,7 +27,7 @@ plt.ylabel('Produksi')
 plt.title('Produksi Cabe per Provinsi dari Tahun 2003-2023')
 st.pyplot(plt)
 
-# Pilih provinsi untuk prediksi
+# 3. Prediksi
 provinsi = df['Provinsi'].unique()
 selected_provinsi = st.selectbox("Pilih Provinsi", provinsi)
 
@@ -48,7 +45,7 @@ if st.button("Prediksi Produksi Tahun Berikutnya"):
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Split data menjadi training dan testing (meskipun kita hanya menggunakan data ini)
+    # Split data menjadi training dan testing
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
     # Buat model linear regression
@@ -63,7 +60,7 @@ if st.button("Prediksi Produksi Tahun Berikutnya"):
     st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi} di Tahun {tahun_prediksi}:")
     st.write(f'Produksi: {y_prediksi[0]:.2f}')
 
-# Evaluasi model (hanya untuk informasi)
+# 4. Evaluasi
 if st.button("Evaluasi Model"):
     all_y_test = [tahun_terakhir_1, tahun_terakhir_2, tahun_terakhir_3]
     all_y_pred = [y_prediksi[0]]  # Hanya satu prediksi
