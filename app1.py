@@ -13,55 +13,59 @@ df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Prod
 # Streamlit app
 st.title("Aplikasi Prediksi Produksi Cabe")
 
-# 1. Dataset
-st.subheader("Dataset Produksi Cabe")
-st.dataframe(df)
+# Kategori dengan radio button
+kategori = st.radio("Pilih Kategori:", ("Dataset", "Grafik", "Prediksi", "Evaluasi"))
 
-# 2. Grafik
-st.subheader("Grafik Produksi Cabe per Provinsi")
-plt.figure(figsize=(10, 6))
-sns.barplot(x='Provinsi', y='Produksi', data=df)
-plt.xticks(rotation=90)
-plt.xlabel('Provinsi')
-plt.ylabel('Produksi')
-plt.title('Produksi Cabe per Provinsi dari Tahun 2003-2023')
-st.pyplot(plt)
+if kategori == "Dataset":
+    st.subheader("Dataset Produksi Cabe")
+    st.dataframe(df)
 
-# 3. Prediksi
-provinsi = df['Provinsi'].unique()
-selected_provinsi = st.selectbox("Pilih Provinsi", provinsi)
+elif kategori == "Grafik":
+    st.subheader("Grafik Produksi Cabe per Provinsi")
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x='Provinsi', y='Produksi', data=df)
+    plt.xticks(rotation=90)
+    plt.xlabel('Provinsi')
+    plt.ylabel('Produksi')
+    plt.title('Produksi Cabe per Provinsi dari Tahun 2003-2023')
+    st.pyplot(plt)
 
-# Input 3 tahun produksi terakhir
-tahun_terakhir_1 = st.number_input("Produksi Tahun Terakhir 1", min_value=0)
-tahun_terakhir_2 = st.number_input("Produksi Tahun Terakhir 2", min_value=0)
-tahun_terakhir_3 = st.number_input("Produksi Tahun Terakhir 3", min_value=0)
+elif kategori == "Prediksi":
+    st.subheader("Prediksi Produksi Cabe")
+    provinsi = df['Provinsi'].unique()
+    selected_provinsi = st.selectbox("Pilih Provinsi", provinsi)
 
-if st.button("Prediksi Produksi Tahun Berikutnya"):
-    # Siapkan data untuk model
-    X = pd.DataFrame({'Tahun': [2021, 2022, 2023]})
-    y = pd.Series([tahun_terakhir_1, tahun_terakhir_2, tahun_terakhir_3])
+    # Input 3 tahun produksi terakhir
+    tahun_terakhir_1 = st.number_input("Produksi Tahun Terakhir 1", min_value=0)
+    tahun_terakhir_2 = st.number_input("Produksi Tahun Terakhir 2", min_value=0)
+    tahun_terakhir_3 = st.number_input("Produksi Tahun Terakhir 3", min_value=0)
 
-    # Normalisasi data
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    if st.button("Prediksi Produksi Tahun Berikutnya"):
+        # Siapkan data untuk model
+        X = pd.DataFrame({'Tahun': [2021, 2022, 2023]})
+        y = pd.Series([tahun_terakhir_1, tahun_terakhir_2, tahun_terakhir_3])
 
-    # Split data menjadi training dan testing
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+        # Normalisasi data
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
 
-    # Buat model linear regression
-    model = LinearRegression()
-    model.fit(X_train, y_train)
+        # Split data menjadi training dan testing
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-    # Prediksi untuk tahun berikutnya
-    tahun_prediksi = 2024
-    X_prediksi = scaler.transform(pd.DataFrame({'Tahun': [tahun_prediksi]}))
-    y_prediksi = model.predict(X_prediksi)
+        # Buat model linear regression
+        model = LinearRegression()
+        model.fit(X_train, y_train)
 
-    st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi} di Tahun {tahun_prediksi}:")
-    st.write(f'Produksi: {y_prediksi[0]:.2f}')
+        # Prediksi untuk tahun berikutnya
+        tahun_prediksi = 2024
+        X_prediksi = scaler.transform(pd.DataFrame({'Tahun': [tahun_prediksi]}))
+        y_prediksi = model.predict(X_prediksi)
 
-# 4. Evaluasi
-if st.button("Evaluasi Model"):
+        st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi} di Tahun {tahun_prediksi}:")
+        st.write(f'Produksi: {y_prediksi[0]:.2f}')
+
+elif kategori == "Evaluasi":
+    st.subheader("Evaluasi Model")
     all_y_test = [tahun_terakhir_1, tahun_terakhir_2, tahun_terakhir_3]
     all_y_pred = [y_prediksi[0]]  # Hanya satu prediksi
 
@@ -69,7 +73,6 @@ if st.button("Evaluasi Model"):
     rmse = mean_squared_error(all_y_test, all_y_pred, squared=False)
     r_squared = r2_score(all_y_test, all_y_pred)
 
-    st.subheader("Evaluasi Model")
     st.write(f'MSE: {mse:.2f}')  
     st.write(f'RMSE: {rmse:.2f}')  
     st.write(f'R-squared: {r_squared:.2f}')
