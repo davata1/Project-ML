@@ -10,6 +10,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 # Load dataset
 df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
 
+# Convert 'Tahun' to numeric
+df['Tahun'] = pd.to_numeric(df['Tahun'])
+
 # Streamlit app
 st.title("Aplikasi Prediksi Produksi Cabe")
 
@@ -90,7 +93,7 @@ with kategori[2]:
         prediksi[selected_provinsi] = y_prediksi[0]
 
         st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi} di Tahun {tahun_prediksi}:")
-                st.write(f'Produksi: {y_prediksi[0]:.2f}')
+        st.write(f'Produksi: {y_prediksi[0]:.2f}')
 
 with kategori[3]:
     st.subheader("Evaluasi Model")
@@ -105,7 +108,7 @@ with kategori[3]:
         X = province_data[['Tahun']]
         y = province_data['Produksi']
 
-        # Normalisasi data
+                # Normalisasi data
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
 
