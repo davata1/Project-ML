@@ -11,24 +11,23 @@ st.write("##### Kelas : Penambangan Data B")
 
 # Sidebar untuk navigasi
 st.sidebar.title("Navigasi")
-description = st.sidebar("Description")
-upload_data = st.sidebar("Upload Data")
-preprocessing = st.sidebar("Preprocessing")
-
+description = st.sidebar.checkbox("Description")
+upload_data = st.sidebar.checkbox("Upload Data")
+preprocessing = st.sidebar.checkbox("Preprocessing")
 
 # Deskripsi
-with description:
+if description:
     st.write("###### Data Set : Human Stress Detection in and through Sleep - Deteksi Stres Manusia di dalam dan melalui Tidur")
-    st.write("###### Sumber Data Set dari Kaggle : https://www.kaggle.com/datasets/laavanya/human-stress-detection-in-and-through-sleep?select=SaYoPillow.csv")
+    st.write("###### Sumber Data Set dari Kaggle : [Kaggle Dataset](https://www.kaggle.com/datasets/laavanya/human-stress-detection-in-and-through-sleep?select=SaYoPillow.csv)")
 
 # Upload Data
-with upload_data:
+if upload_data:
     st.write("###### DATASET YANG DIGUNAKAN")
     df = pd.read_csv('https://raw.githubusercontent.com/davata1/Project-Pendat/main/SaYoPillow.csv')
     st.dataframe(df)
 
 # Preprocessing
-with preprocessing:
+if preprocessing:
     st.subheader("Normalisasi Data")
     st.write("Rumus Normalisasi Data :")
     st.image('https://i.stack.imgur.com/EuitP.png', use_column_width=False, width=250)
@@ -53,14 +52,11 @@ with preprocessing:
     st.write(scaled_features)
 
     st.subheader('Target Label')
-    dumies = pd.get_dummies(df.sl).columns.values.tolist()
-    dumies = np.array(dumies)
-
-    labels = pd.DataFrame({
-        '1': [dumies[0]],
-        '2': [dumies[1]],
-        '3': [dumies[2]],
-        '4': [dumies[3]],
-        '5': [dumies[4]]
-    })
+    # Menggunakan pd.get_dummies untuk mendapatkan label target
+    labels = pd.get_dummies(df['sl'])
     st.write(labels)
+
+    # Menampilkan label unik
+    unique_labels = df['sl'].unique()
+    st.write("Label Target Unik:")
+    st.write(unique_labels)
