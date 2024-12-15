@@ -21,15 +21,36 @@ with kategori[0]:
     st.dataframe(df)
 
 with kategori[1]:
-   st.subheader("Grafik Produksi Cabe per Provinsi")
+    st.subheader("Grafik Produksi Cabe per Provinsi")
+    
+    # Plot data produksi per provinsi
+    plt.figure(figsize=(12, 6))
+    for prov in df['Provinsi'].unique():
+        province_data = df[df['Provinsi'] == prov]
+        plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
+
+    plt.xlabel('Tahun')
+    plt.ylabel('Produksi Cabe')
+    plt.title('Perbandingan Produksi Cabe per Daerah')
+    plt.legend()
+    st.pyplot(plt)
+
+    # Total produksi per tahun
+    plt.figure(figsize=(10, 6))
+    df.groupby('Tahun')['Produksi'].sum().plot()
+    plt.xlabel('Tahun')
+    plt.ylabel('Produksi')
+    plt.title('Total Produksi Cabe dari Tahun 2003-2023')
+    st.pyplot(plt)
+
+    # Visualisasi Produksi per Provinsi
     plt.figure(figsize=(10, 6))
     sns.barplot(x='Provinsi', y='Produksi', data=df)
-    plt.xticks(rotation=90)
     plt.xlabel('Provinsi')
+    plt.xticks(rotation=90)
     plt.ylabel('Produksi')
-    plt.title('Produksi Cabe per Provinsi dari Tahun 2003-2023')
+    plt.title('Produksi Cabai per Provinsi dari Tahun 2003-2023')
     st.pyplot(plt)
-    
 
 with kategori[2]:
     st.subheader("Prediksi Produksi Cabe")
@@ -67,12 +88,39 @@ with kategori[2]:
 
 with kategori[3]:
     st.subheader("Evaluasi Model")
-    all_y_test = [tahun_terakhir_1, tahun_terakhir_2, tahun_terakhir_3]
-    all_y_pred = [y_prediksi[0]]  # Hanya satu prediksi
+    
+    # Inisialisasi untuk evaluasi
+    all_y_test = []
+    all_y_pred = []
 
-    mse = mean_squared_error(all_y_test, all_y_pred)
-    rmse = mean_squared_error(all_y_test, all_y_pred, squared=False)
-    r_squared = r2_score(all_y_test, all_y_pred)
+    # Model untuk setiap provinsi
+    for prov in provinsi:
+        province_data = df[df['Provinsi'] == prov]
+        X = province_data[['Tahun']]
+        y = province_data['Produksi']
+
+        # Normalisasi data
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+
+                # Split data menjadi training dan testing
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+        # Buat model linear regression
+        model = LinearRegression()
+        model.fit(X_train, y_train)
+
+        # Prediksi pada data test
+        y_pred = model.predict(X_test)
+
+        # Simpan hasil prediksi dan nilai sebenarnya untuk RMSE keseluruhan
+        all_y_test.extend(y_test)
+        all_y_pred.extend(y_pred)
+
+    # Evaluasi model
+    mse = mean_squared_error(all_y_test, all_y_pred)  # Hitung MSE
+    rmse = mean_squared_error(all_y_test, all_y_pred, squared=False)  # Hitung RMSE
+    r_squared = r2_score(all_y_test, all_y_pred)  # Hitung R-squared
 
     st.write(f'MSE: {mse:.2f}')  
     st.write(f'RMSE: {rmse:.2f}')  
@@ -82,3 +130,9 @@ with kategori[3]:
 total_produksi = df.groupby('Provinsi')['Produksi'].sum()
 st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
 st.write(total_produksi)
+
+# Menampilkan hasil prediksi untuk tahun 2024
+st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024:")
+for prov in provinsi:
+    if prov in prediksi:
+        st.write(f'{prov}: {prediksi[prov]:.2f}')
