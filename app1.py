@@ -62,6 +62,9 @@ with kategori[2]:
     tahun_terakhir_2 = st.number_input("Produksi Tahun Terakhir 2", min_value=0)
     tahun_terakhir_3 = st.number_input("Produksi Tahun Terakhir 3", min_value=0)
 
+    # Inisialisasi dictionary untuk menyimpan prediksi
+    prediksi = {}
+
     if st.button("Prediksi Produksi Tahun Berikutnya"):
         # Siapkan data untuk model
         X = pd.DataFrame({'Tahun': [2021, 2022, 2023]})
@@ -83,8 +86,11 @@ with kategori[2]:
         X_prediksi = scaler.transform(pd.DataFrame({'Tahun': [tahun_prediksi]}))
         y_prediksi = model.predict(X_prediksi)
 
+        # Simpan hasil prediksi
+        prediksi[selected_provinsi] = y_prediksi[0]
+
         st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi} di Tahun {tahun_prediksi}:")
-        st.write(f'Produksi: {y_prediksi[0]:.2f}')
+                st.write(f'Produksi: {y_prediksi[0]:.2f}')
 
 with kategori[3]:
     st.subheader("Evaluasi Model")
@@ -103,7 +109,7 @@ with kategori[3]:
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
 
-                # Split data menjadi training dan testing
+        # Split data menjadi training dan testing
         X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
         # Buat model linear regression
