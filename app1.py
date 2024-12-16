@@ -137,10 +137,6 @@ with kategori[3]:
     st.write(f'RMSE: {rmse:.2f}')  
     st.write(f'R-squared: {r_squared:.2f}')
 
-# Menampilkan total produksi cabai per provinsi
-total_produksi = df.groupby('Provinsi')['Produksi'].sum()
-st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
-st.write(total_produksi)
 
 # Menampilkan hasil prediksi untuk tahun 2024, 2025, dan 2026
 st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024, 2025, dan 2026:")
