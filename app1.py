@@ -18,7 +18,7 @@ st.title("Aplikasi Prediksi Produksi Cabe")
 kategori = st.tabs(["Prediksi"])
 
 
-with kategori[2]:
+with kategori[0]:
     st.subheader("Prediksi Produksi Cabe")
     provinsi = df['Provinsi'].unique()
     selected_provinsi = st.selectbox("Pilih Provinsi", provinsi)
