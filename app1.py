@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
+import numpy as np
 
 # Load dataset
 df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
@@ -60,18 +61,18 @@ with kategori[2]:
     provinsi = df['Provinsi'].unique()
     selected_provinsi = st.selectbox("Pilih Provinsi", provinsi)
 
-    # Input 3 tahun produksi terakhir
-    tahun_terakhir_1 = st.number_input("Produksi Tahun Terakhir 1", min_value=0)
-    tahun_terakhir_2 = st.number_input("Produksi Tahun Terakhir 2", min_value=0)
-    tahun_terakhir_3 = st.number_input("Produksi Tahun Terakhir 3", min_value=0)
+    # Input 20 tahun produksi dari 2003 hingga 2023
+    tahun_produksi = {}
+    for year in range(2003, 2024):
+        tahun_produksi[year] = st.number_input(f"Produksi Tahun {year}", min_value=0)
 
     # Inisialisasi dictionary untuk menyimpan prediksi
     prediksi = {}
 
     if st.button("Prediksi Produksi Tahun Berikutnya"):
         # Siapkan data untuk model
-        X = pd.DataFrame({'Tahun': [2021, 2022, 2023]})
-        y = pd.Series([tahun_terakhir_1, tahun_terakhir_2, tahun_terakhir_3])
+        X = pd.DataFrame({'Tahun': list(tahun_produksi.keys())})
+        y = pd.Series(list(tahun_produksi.values()))
 
         # Normalisasi data
         scaler = StandardScaler()
@@ -84,21 +85,22 @@ with kategori[2]:
         model = LinearRegression()
         model.fit(X_train, y_train)
 
-        # Prediksi untuk tahun berikutnya
-        tahun_prediksi = 2024
-        X_prediksi = scaler.transform(pd.DataFrame({'Tahun': [tahun_prediksi]}))
-        y_prediksi = model.predict(X_prediksi)
+        # Prediksi untuk tahun berikutnya (2024, 2025, 2026)
+        tahun_prediksi = [2024, 2025, 2026]
+        prediksi[selected_provinsi] = {}
 
-        # Simpan hasil prediksi
-        prediksi[selected_provinsi] = y_prediksi[0]
+        for tahun in tahun_prediksi:
+            X_prediksi = scaler.transform(pd.DataFrame({'Tahun': [tahun]}))
+            y_prediksi = model.predict(X_prediksi)
+            prediksi[selected_provinsi][tahun] = y_prediksi[0]
 
-        st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi} di Tahun {tahun_prediksi}:")
-        st.write(f'Produksi: {y_prediksi[0]:.2f}')
+        st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi}:")
+        for tahun in tahun_prediksi:
+            st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
 
 with kategori[3]:
-    st.subheader("Evaluasi Model")
-    
-    # Inisialisasi untuk evaluasi
+    st.subheader("Evaluasi")
+                     # Inisialisasi untuk evaluasi
     all_y_test = []
     all_y_pred = []
 
@@ -140,8 +142,9 @@ total_produksi = df.groupby('Provinsi')['Produksi'].sum()
 st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
 st.write(total_produksi)
 
-# Menampilkan hasil prediksi untuk tahun 2024
-st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024:")
+# Menampilkan hasil prediksi untuk tahun 2024, 2025, dan 2026
+st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024, 2025, dan 2026:")
 for prov in provinsi:
     if prov in prediksi:
-        st.write(f'{prov}: {prediksi[prov]:.2f}')
+        for tahun in prediksi[prov]:
+            st.write(f'{prov} - Tahun {tahun}: {prediksi[prov][tahun]:.2f}')
