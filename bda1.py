@@ -2,7 +2,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
-import cv2
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
@@ -78,9 +77,6 @@ with kategori[1]:
         image = Image.open(uploaded_file)
         st.image(image, caption='Uploaded Photo', use_container_width=True)
         
-        # Convert the image to a format suitable for OpenCV
-        image_cv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-
         # Mengubah gambar menjadi bentuk yang sesuai untuk prediksi
         resized_image = image.resize((128, 128))
         
@@ -88,17 +84,8 @@ with kategori[1]:
         processed_image = np.array(resized_image) / 255.0
         input_image = np.expand_dims(processed_image, axis=0)
 
-        # Extract HSV features
-        hsv_image = cv2.cvtColor(image_cv, cv2.COLOR_BGR2HSV)
-        average_hsv = cv2.mean(hsv_image)[:3]  # Get average HSV values (H, S, V)
-
-        # Prepare the input for prediction
-        # Assuming your model expects a 1D array of features
-        input_features = np.array([average_hsv[0], average_hsv[1], average_hsv[2]])
-        input_features = input_features.reshape(1, -1)  # Reshape for prediction
-
         # Melakukan prediksi menggunakan model
-        prediction = model.predict(input_features)
+        prediction = model.predict(image)
         class_index = np.argmax(prediction[0])
         class_name = classes[class_index]
 
