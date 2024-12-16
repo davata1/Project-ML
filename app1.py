@@ -60,7 +60,7 @@ with kategori[0]:
         for tahun in tahun_prediksi:
             st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
     with kategori[1]:
-        model = load_model('cnn_model.h5')
+        model = load_model('knn_model.pkl')
         classes =["_BrownSpot","_Hispa","_LeafBlast","_Healthy"]
         # Menu pilihan
         menu = st.selectbox("Capture Option :",["Upload Photo", "Camera"])
