@@ -73,11 +73,12 @@ with kategori[1]:
     # Menu pilihan
     menu = st.selectbox("Capture Option:", ["Upload Photo"])
 
-    if menu == "Upload Photo":
-        uploaded_file = st.file_uploader("Select photo", type=['png', 'jpg', 'jpeg'])
-        if uploaded_file is not None:
-            image = Image.open(uploaded_file)
-            st.image(image, caption='Uploaded Photo', use_column_width=True)
+   # Directly provide the file uploader
+    uploaded_file = st.file_uploader("Upload Photo", type=['png', 'jpg', 'jpeg'])
+
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file)
+        st.image(image, caption='Uploaded Photo', use_column_width=True)
             # Mengubah gambar menjadi bentuk yang sesuai untuk prediksi
             resized_image = image.resize((128, 128))
                         # Normalize the image
