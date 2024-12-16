@@ -71,7 +71,7 @@ with kategori[1]:
     classes = ["_BrownSpot", "_Hispa", "_LeafBlast", "_Healthy"]
     
     # Menu pilihan
-    menu = st.selectbox("Capture Option:", ["Upload Photo", "Camera"])
+    menu = st.selectbox("Capture Option:", ["Upload Photo"])
 
     if menu == "Upload Photo":
         uploaded_file = st.file_uploader("Select photo", type=['png', 'jpg', 'jpeg'])
