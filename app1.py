@@ -1,4 +1,3 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -29,10 +28,10 @@ with kategori[1]:
     st.subheader("Grafik Produksi Cabe per Provinsi")
     
     # Plot data produksi per provinsi
-plt.figure(figsize=(12, 6))
-for prov in df['Provinsi'].unique():
-    province_data = df[df['Provinsi'] == prov]
-    plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
+    plt.figure(figsize=(12, 6))
+    for prov in df['Provinsi'].unique():
+        province_data = df[df['Provinsi'] == prov]
+        plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
 
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
@@ -136,13 +135,16 @@ with kategori[3]:
 
     # Evaluasi model
     mse = mean_squared_error(all_y_test, all_y_pred)  # Hitung MSE
-    rmse = np.sqrt(mse)  # Calculate RMSE from MSE
+    rmse = np.sqrt(mse)  # Hitung RMSE dari MSE
     r_squared = r2_score(all_y_test, all_y_pred)  # Hitung R-squared
 
     st.write(f'MSE: {mse:.2f}')  
     st.write(f'RMSE: {rmse:.2f}')  
     st.write(f'R-squared: {r_squared:.2f}')
 
-# Hasil prediksi untuk tahun 2024, 2025, dan 2026
-# This part is already included in the "Prediksi" category above, so it should not be repeated here.
-
+# Menampilkan hasil prediksi untuk tahun 2024, 2025, dan 2026
+st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024, 2025, dan 2026:")
+for prov in provinsi:
+    if prov in prediksi:
+        for tahun in prediksi[prov]:
+            st.write(f'{prov} - Tahun {tahun}: {prediksi[prov][tahun]:.2f}')
