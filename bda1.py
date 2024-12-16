@@ -77,6 +77,9 @@ with kategori[1]:
         image = Image.open(uploaded_file)
         st.image(image, caption='Uploaded Photo', use_container_width=True)
         
+        # Convert the image to a format suitable for OpenCV
+        image_cv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+
         # Mengubah gambar menjadi bentuk yang sesuai untuk prediksi
         resized_image = image.resize((128, 128))
         
@@ -84,8 +87,17 @@ with kategori[1]:
         processed_image = np.array(resized_image) / 255.0
         input_image = np.expand_dims(processed_image, axis=0)
 
+        # Extract HSV features
+        hsv_image = cv2.cvtColor(image_cv, cv2.COLOR_BGR2HSV)
+        average_hsv = cv2.mean(hsv_image)[:3]  # Get average HSV values (H, S, V)
+
+        # Prepare the input for prediction
+        # Assuming your model expects a 1D array of features
+        input_features = np.array([average_hsv[0], average_hsv[1], average_hsv[2]])
+        input_features = input_features.reshape(1, -1)  # Reshape for prediction
+
         # Melakukan prediksi menggunakan model
-        prediction = model.predict(image)
+        prediction = model.predict(input_features)
         class_index = np.argmax(prediction[0])
         class_name = classes[class_index]
 
