@@ -5,12 +5,10 @@ import streamlit as st
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
-from keras.models import load_model
 import pickle
 from PIL import Image
-import requests
-import io
 
 # Load dataset
 df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
@@ -67,31 +65,32 @@ with kategori[0]:
 # Classification Tab
 with kategori[1]:
     # Load the KNN model
-    # model_url = 'https://github.com/davata1/Project-ML/raw/main/knn_model.pkl'
-    # response = requests.get(model_url)
-    # model = pickle.loads(response.content)  # Load the model from the URL
-    model = load_model ('knn_model.pkl')
+    model_url = 'https://github.com/davata1/Project-ML/raw/main/knn_model.pkl'  # Use the raw link
+    model = pickle.load(open('knn_model.pkl', 'rb'))  # Load the model from a local file
 
     classes = ["Sehat", "Hama", "Bercak"]
     
-    # Menu pilihan
-    menu = st.selectbox("Capture Option:", ["Upload Photo", "Camera"])
+    # Directly provide the file uploader
+    uploaded_file = st.file_uploader("Upload Photo", type=['png', 'jpg', 'jpeg'])
 
-    if menu == "Upload Photo":
-        uploaded_file = st.file_uploader("Select photo", type=['png', 'jpg', 'jpeg'])
-        if uploaded_file is not None:
-            image = Image.open(uploaded_file)
-            st.image(image, caption='Uploaded Photo', use_column_width=True)
-            
-            # Mengubah gambar menjadi bentuk yang sesuai untuk prediksi
-            resized_image = image.resize((128, 128))  # Resize to match model input
-            processed_image = np.array(resized_image) / 255.0  # Normalize the image
-            input_image = np.expand_dims(processed_image, axis=0)  # Add batch dimension
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file)
+        st.image(image, caption='Uploaded Photo', use_container_width=True)
+        
+        # Mengubah gambar menjadi bentuk yang sesuai untuk prediksi
+        resized_image = image.resize((128, 128))
+        
+        # Normalize the image
+        processed_image = np.array(resized_image) / 255.0
+        input_image = np.expand_dims(processed_image, axis=0)
 
-            # Melakukan prediksi menggunakan model
-            prediction = model.predict(input_image)
-            class_index = np.argmax(prediction[0])
-            class_name = classes[class_index]
+        # Melakukan prediksi menggunakan model
+        prediction = model.predict(image)
+        class_index = np.argmax(prediction[0])
+        class_name = classes[class_index]
 
-            # Menampilkan hasil prediksi
-            st.success(f"Hasil Prediksi: {class_name}")
+        # Menampilkan hasil prediksi
+        st.success(f"Hasil Prediksi: {class_name}")
+
+# Optional: Add a section to display the model's performance metrics if available
+# You can load the metrics from a file or calculate them based on a test dataset
