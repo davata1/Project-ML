@@ -11,14 +11,11 @@ import numpy as np
 # Load dataset
 df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
 
-# Convert 'Tahun' to numeric
-df['Tahun'] = pd.to_numeric(df['Tahun'])
-
 # Streamlit app
 st.title("Aplikasi Prediksi Produksi Cabe")
 
 # Kategori dengan tabs
-kategori = st.tabs(["Dataset", "Grafik", "Prediksi", "Evaluasi"])
+kategori = st.tabs(["Prediksi"])
 
 
 with kategori[2]:
@@ -63,42 +60,5 @@ with kategori[2]:
         for tahun in tahun_prediksi:
             st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
 
-with kategori[3]:
-    st.subheader("Evaluasi")
-    # Inisialisasi untuk evaluasi
-    all_y_test = []
-    all_y_pred = []
 
-    # Model untuk setiap provinsi
-    for prov in provinsi:
-        province_data = df[df['Provinsi'] == prov]
-        X = province_data[['Tahun']]
-        y = province_data['Produksi']
-
-        # Normalisasi data
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
-
-        # Split data menjadi training dan testing
-        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
-        # Buat model linear regression
-        model = LinearRegression()
-        model.fit(X_train, y_train)
-
-        # Prediksi pada data test
-        y_pred = model.predict(X_test)
-
-        # Simpan hasil prediksi dan nilai sebenarnya untuk RMSE keseluruhan
-        all_y_test.extend(y_test)
-        all_y_pred.extend(y_pred)
-
-    # Evaluasi model
-    mse = mean_squared_error(all_y_test, all_y_pred)  # Hitung MSE
-    rmse = np.sqrt(mse)  # Hitung RMSE dari MSE
-    r_squared = r2_score(all_y_test, all_y_pred)  # Hitung R-squared
-
-    st.write(f'MSE: {mse:.2f}')  
-    st.write(f'RMSE: {rmse:.2f}')  
-    st.write(f'R-squared: {r_squared:.2f}')
    
