@@ -40,10 +40,6 @@ for prov in df['Provinsi'].unique():
     
     # Rotate x-tick labels for better visibility
     plt.xticks(rotation=45)
-    
-    # Use tight_layout to adjust the plot
-    plt.tight_layout()
-    
     st.pyplot(plt)
 
     # Total produksi per tahun
