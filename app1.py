@@ -60,7 +60,7 @@ with kategori[0]:
         for tahun in tahun_prediksi:
             st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
     with kategori[1]:
-        model = load_model('https://github.com/davata1/Project-ML/blob/main/knn_model.pkl')
+        model = load_model('https://github.com/davata1/Project-ML/raw/refs/heads/main/knn_model.pkl')
         classes =["_BrownSpot","_Hispa","_LeafBlast","_Healthy"]
         # Menu pilihan
         menu = st.selectbox("Capture Option :",["Upload Photo", "Camera"])
