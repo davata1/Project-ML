@@ -1,3 +1,4 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -28,10 +29,10 @@ with kategori[1]:
     st.subheader("Grafik Produksi Cabe per Provinsi")
     
     # Plot data produksi per provinsi
-    plt.figure(figsize=(12, 6))
-    for prov in df['Provinsi'].unique():
-        province_data = df[df['Provinsi'] == prov]
-        plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
+plt.figure(figsize=(12, 6))
+for prov in df['Provinsi'].unique():
+    province_data = df[df['Provinsi'] == prov]
+    plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
 
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
@@ -55,6 +56,11 @@ with kategori[1]:
     plt.ylabel('Produksi')
     plt.title('Produksi Cabai per Provinsi dari Tahun 2003-2023')
     st.pyplot(plt)
+
+    # Menampilkan total produksi cabai per provinsi
+    total_produksi = df.groupby('Provinsi')['Produksi'].sum()
+    st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
+    st.write(total_produksi)
 
 with kategori[2]:
     st.subheader("Prediksi Produksi Cabe")
@@ -96,11 +102,11 @@ with kategori[2]:
 
         st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi}:")
         for tahun in tahun_prediksi:
-            st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
+                        st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
 
 with kategori[3]:
     st.subheader("Evaluasi")
-                     # Inisialisasi untuk evaluasi
+    # Inisialisasi untuk evaluasi
     all_y_test = []
     all_y_pred = []
 
@@ -137,14 +143,6 @@ with kategori[3]:
     st.write(f'RMSE: {rmse:.2f}')  
     st.write(f'R-squared: {r_squared:.2f}')
 
-# Menampilkan total produksi cabai per provinsi
-total_produksi = df.groupby('Provinsi')['Produksi'].sum()
-st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
-st.write(total_produksi)
+# Hasil prediksi untuk tahun 2024, 2025, dan 2026
+# This part is already included in the "Prediksi" category above, so it should not be repeated here.
 
-# Menampilkan hasil prediksi untuk tahun 2024, 2025, dan 2026
-st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024, 2025, dan 2026:")
-for prov in provinsi:
-    if prov in prediksi:
-        for tahun in prediksi[prov]:
-            st.write(f'{prov} - Tahun {tahun}: {prediksi[prov][tahun]:.2f}')
