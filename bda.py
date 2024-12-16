@@ -5,6 +5,7 @@ import streamlit as st
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
+from keras.models import load_model
 import numpy as np
 import pickle
 from PIL import Image
@@ -66,11 +67,12 @@ with kategori[0]:
 # Classification Tab
 with kategori[1]:
     # Load the KNN model
-    model_url = 'https://github.com/davata1/Project-ML/raw/main/knn_model.pkl'
-    response = requests.get(model_url)
-    model = pickle.loads(response.content)  # Load the model from the URL
+    # model_url = 'https://github.com/davata1/Project-ML/raw/main/knn_model.pkl'
+    # response = requests.get(model_url)
+    # model = pickle.loads(response.content)  # Load the model from the URL
+    model = load_model ('knn_model.pkl')
 
-    classes = ["_BrownSpot", "_Hispa", "_LeafBlast", "_Healthy"]
+    classes = ["Sehat", "Hama", "Bercak"]
     
     # Menu pilihan
     menu = st.selectbox("Capture Option:", ["Upload Photo", "Camera"])
