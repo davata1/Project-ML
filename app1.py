@@ -101,7 +101,7 @@ with kategori[2]:
 
         st.subheader(f"Hasil Prediksi Produksi Cabe untuk Provinsi {selected_provinsi}:")
         for tahun in tahun_prediksi:
-                        st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
+            st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
 
 with kategori[3]:
     st.subheader("Evaluasi")
@@ -141,10 +141,4 @@ with kategori[3]:
     st.write(f'MSE: {mse:.2f}')  
     st.write(f'RMSE: {rmse:.2f}')  
     st.write(f'R-squared: {r_squared:.2f}')
-
-# Menampilkan hasil prediksi untuk tahun 2024, 2025, dan 2026
-st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024, 2025, dan 2026:")
-for prov in provinsi:
-    if prov in prediksi:
-        for tahun in prediksi[prov]:
-            st.write(f'{prov} - Tahun {tahun}: {prediksi[prov][tahun]:.2f}')
+   
