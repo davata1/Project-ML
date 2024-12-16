@@ -20,46 +20,6 @@ st.title("Aplikasi Prediksi Produksi Cabe")
 # Kategori dengan tabs
 kategori = st.tabs(["Dataset", "Grafik", "Prediksi", "Evaluasi"])
 
-with kategori[0]:
-    st.subheader("Dataset Produksi Cabe")
-    st.dataframe(df)
-
-with kategori[1]:
-    st.subheader("Grafik Produksi Cabe per Provinsi")
-    
-    # Plot data produksi per provinsi
-    plt.figure(figsize=(12, 6))
-    for prov in df['Provinsi'].unique():
-        province_data = df[df['Provinsi'] == prov]
-        plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
-
-    plt.xlabel('Tahun')
-    plt.ylabel('Produksi Cabe')
-    plt.title('Perbandingan Produksi Cabe per Daerah')
-    plt.legend()
-    st.pyplot(plt)
-
-    # Total produksi per tahun
-    plt.figure(figsize=(10, 6))
-    df.groupby('Tahun')['Produksi'].sum().plot()
-    plt.xlabel('Tahun')
-    plt.ylabel('Produksi')
-    plt.title('Total Produksi Cabe dari Tahun 2003-2023')
-    st.pyplot(plt)
-
-    # Visualisasi Produksi per Provinsi
-    plt.figure(figsize=(10, 6))
-    sns.barplot(x='Provinsi', y='Produksi', data=df)
-    plt.xlabel('Provinsi')
-    plt.xticks(rotation=90)
-    plt.ylabel('Produksi')
-    plt.title('Produksi Cabai per Provinsi dari Tahun 2003-2023')
-    st.pyplot(plt)
-
-    # Menampilkan total produksi cabai per provinsi
-    total_produksi = df.groupby('Provinsi')['Produksi'].sum()
-    st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
-    st.write(total_produksi)
 
 with kategori[2]:
     st.subheader("Prediksi Produksi Cabe")
