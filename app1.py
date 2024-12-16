@@ -56,11 +56,6 @@ with kategori[1]:
     plt.title('Produksi Cabai per Provinsi dari Tahun 2003-2023')
     st.pyplot(plt)
 
-    # Menampilkan total produksi cabai per provinsi
-    total_produksi = df.groupby('Provinsi')['Produksi'].sum()
-    st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
-    st.write(total_produksi)
-
 with kategori[2]:
     st.subheader("Prediksi Produksi Cabe")
     provinsi = df['Provinsi'].unique()
@@ -104,9 +99,8 @@ with kategori[2]:
             st.write(f'Tahun {tahun}: Produksi: {prediksi[selected_provinsi][tahun]:.2f}')
 
 with kategori[3]:
-        st.subheader("Evaluasi Model")
-    
-    # Inisialisasi untuk evaluasi
+    st.subheader("Evaluasi")
+                     # Inisialisasi untuk evaluasi
     all_y_test = []
     all_y_pred = []
 
@@ -136,12 +130,17 @@ with kategori[3]:
 
     # Evaluasi model
     mse = mean_squared_error(all_y_test, all_y_pred)  # Hitung MSE
-    rmse = np.sqrt(mse)  # Hitung RMSE dari MSE
+    rmse = np.sqrt(mse)  # Calculate RMSE from MSE
     r_squared = r2_score(all_y_test, all_y_pred)  # Hitung R-squared
 
     st.write(f'MSE: {mse:.2f}')  
     st.write(f'RMSE: {rmse:.2f}')  
     st.write(f'R-squared: {r_squared:.2f}')
+
+# Menampilkan total produksi cabai per provinsi
+total_produksi = df.groupby('Provinsi')['Produksi'].sum()
+st.subheader('Produksi cabai per Provinsi dari Tahun 2003-2023:')
+st.write(total_produksi)
 
 # Menampilkan hasil prediksi untuk tahun 2024, 2025, dan 2026
 st.subheader("Hasil Prediksi Produksi Cabe untuk Tahun 2024, 2025, dan 2026:")
