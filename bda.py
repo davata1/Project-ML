@@ -14,7 +14,7 @@ from PIL import Image
 df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
 
 # Streamlit app
-st.title("Aplikasi Prediksi Produksi Cabe")
+st.title("Pendekatan Big Data Analisis Dalam Sektor Pertanian")
 
 # Kategori dengan tabs
 kategori = st.tabs(["Prediksi", "Klasifikasi"])
@@ -64,6 +64,7 @@ with kategori[0]:
 
 # Classification Tab
 with kategori[1]:
+    st.subheader("Klasifikasi Penyakit Daun Kencur")
     # Load the KNN model
     model_url = 'https://github.com/davata1/Project-ML/raw/main/knn_model.pkl'  # Use the raw link
     model = pickle.load(open('knn_model.pkl', 'rb'))  # Load the model from a local file
