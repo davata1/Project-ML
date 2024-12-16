@@ -37,9 +37,6 @@ for prov in df['Provinsi'].unique():
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
     plt.legend()
-    
-    # Rotate x-tick labels for better visibility
-    plt.xticks(rotation=45)
     st.pyplot(plt)
 
     # Total produksi per tahun
