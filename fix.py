@@ -35,7 +35,7 @@ with kategori[0]:
     plt.legend()
     
     # Mengatur posisi label provinsi ke kiri
-    plt.xticks(rotation=45, ha='right')  # Rotasi label dan posisikan ke kanan
+    plt.xticks(rotation=10, ha='right')  # Rotasi label dan posisikan ke kanan
     plt.subplots_adjust(bottom=0.2)  # Menambahkan ruang di bawah grafik
 
     st.pyplot(plt)
