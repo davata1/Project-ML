@@ -75,7 +75,7 @@ with kategori[0]:
 
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
-    plt.title('Perbandingan Produksi Cabe per Daerah dan Prediksi 2024-2026')
+    plt.title('Prediksi Produksi Cabai dari tahun 2024 - 2026')
     plt.legend()
     st.pyplot(plt)
     tahun_prediksi_list = [2024, 2025, 2026]  # List tahun prediksi
