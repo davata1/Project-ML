@@ -28,14 +28,16 @@ with kategori[0]:
     for prov in df['Provinsi'].unique():
         province_data = df[df['Provinsi'] == prov]
         plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
-    # Menambahkan prediksi untuk tahun 2024, 2025, dan 2026
-    for prov in provinsi:
-        plt.plot([tahun], [prediksi[(prov, tahun)]], 'ro')  # Titik merah untuk prediksi
-    
+
+        # Menambahkan prediksi untuk tahun 2024, 2025, dan 2026
+        for tahun in [2024, 2025, 2026]:
+            if (prov, tahun) in prediksi:  # Check if prediction exists
+                plt.plot(tahun, prediksi[(prov, tahun)], 'ro', markersize=8)  # Titik merah untuk prediksi
+
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
-    plt.legend()
+    plt.legend(loc='upper left')  # Optional: specify legend location
     st.pyplot(plt)
 
 # Classification Tab
