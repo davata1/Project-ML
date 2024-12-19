@@ -29,6 +29,11 @@ with kategori[0]:
         province_data = df[df['Provinsi'] == prov]
         plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
 
+        # Assuming you have a separate DataFrame or a way to identify prediction data
+        # For example, let's say you have a column 'Prediksi' in your DataFrame
+        if 'Prediksi' in province_data.columns:
+            plt.plot(province_data['Tahun'], province_data['Prediksi'], marker='o', color='red', label=f'{prov} Prediksi')
+
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
