@@ -92,10 +92,5 @@ with kategori[0]:
     plt.title('Produksi Cabai per Provinsi dari Tahun 2003-2023')
     st.pyplot(plt)
 
-    plt.figure(figsize=(10,6))
-    df.groupby('Tahun')['Produksi'].sum().plot()
-    plt.xlabel('Tahun')
-    plt.ylabel('Produksi')
-    plt.title('Produksi Padi dari Tahun 2003-2020')
-    st.pyplot(plt)
+
 
