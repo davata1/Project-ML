@@ -28,7 +28,10 @@ with kategori[0]:
     for prov in df['Provinsi'].unique():
         province_data = df[df['Provinsi'] == prov]
         plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
-
+    # Menambahkan prediksi untuk tahun 2024, 2025, dan 2026
+    for prov in provinsi:
+        plt.plot([tahun], [prediksi[(prov, tahun)]], 'ro')  # Titik merah untuk prediksi
+    
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
