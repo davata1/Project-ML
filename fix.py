@@ -32,9 +32,11 @@ with kategori[0]:
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
-    plt.legend()
+    
+    # Move the legend to the left
+    plt.legend(loc='upper left', bbox_to_anchor=(1, 1))  # Adjust the position as needed
     st.pyplot(plt)
-    plt.xlim(left=-1)  # Mengatur batas sumbu x agar label provinsi terlihat
+
 
 # Classification Tab
 with kategori[1]:
