@@ -32,7 +32,7 @@ with kategori[0]:
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
-    plt.legend(left)
+    plt.legend(loc='left')
     st.pyplot(plt)
 
 
