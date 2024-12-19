@@ -14,10 +14,10 @@ from PIL import Image
 df = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/Produksi%20Tanaman%20Cabe.csv')
 
 # Streamlit app
-st.title("Aplikasi Prediksi Produksi Cabe")
+st.title("Pendekatan Big Data Analisis Dalam Sektor Pertanian")
 
 # Kategori dengan tabs
-kategori = st.tabs(["Prediksi", "Klasifikasi"])
+kategori = st.tabs(["Prediksi"])
 
 prediksi = {}
 all_y_test = []
