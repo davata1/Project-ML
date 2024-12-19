@@ -19,17 +19,64 @@ st.title("Aplikasi Prediksi Produksi Cabe")
 # Kategori dengan tabs
 kategori = st.tabs(["Prediksi", "Klasifikasi"])
 
+prediksi = {}
+all_y_test = []
+all_y_pred = []
+
 # Prediction Tab
 with kategori[0]:
     st.subheader("Grafik Produksi Cabe per Provinsi")
     
-    # Plot data produksi per provinsi
-    plt.figure(figsize=(12, 6))
+    # Daftar tahun yang ingin diprediksi
+    tahun_prediksi_list = [2024, 2025, 2026]
+
+    # Loop through each province to train the model and make predictions
     for prov in df['Provinsi'].unique():
+        # Ambil data untuk provinsi tertentu
         province_data = df[df['Provinsi'] == prov]
+
+        # Siapkan data untuk model
+        X = province_data[['Tahun']]
+        y = province_data['Produksi']
+
+        # Normalisasi data
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+
+        # Split data menjadi training dan testing
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+        # Buat model linear regression
+        model = LinearRegression()
+        model.fit(X_train, y_train)
+
+        # Prediksi pada data test
+        y_pred = model.predict(X_test)
+
+        # Simpan hasil prediksi dan nilai sebenarnya untuk RMSE keseluruhan
+        all_y_test.extend(y_test)
+        all_y_pred.extend(y_pred)
+
+        # Prediksi produksi cabe untuk tahun 2024, 2025, dan 2026
+        for tahun_prediksi in tahun_prediksi_list:
+            X_prediksi = scaler.transform(pd.DataFrame({'Tahun': [tahun_prediksi]}))
+            y_prediksi = model.predict(X_prediksi)
+            prediksi[(prov, tahun_prediksi)] = y_prediksi[0]
+
+        # Plot data produksi per provinsi
         plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
-    
+
     # Menambahkan prediksi untuk tahun 2024, 2025, dan 2026
+    for prov in df['Provinsi'].unique():
+        for tahun in tahun_prediksi_list:
+            if (prov, tahun) in prediksi:  # Check if the prediction exists
+                plt.plot([tahun], [prediksi[(prov, tahun)]], 'ro')  # Titik merah untuk prediksi
+
+    plt.xlabel('Tahun')
+    plt.ylabel('Produksi Cabe')
+    plt.title('Perbandingan Produksi Cabe per Daerah dan Prediksi 2024-2026')
+    plt.legend()
+    st.pyplot(plt)
     tahun_prediksi_list = [2024, 2025, 2026]  # List tahun prediksi
     for prov in df['Provinsi'].unique():
         for tahun in tahun_prediksi_list:
@@ -41,35 +88,3 @@ with kategori[0]:
     plt.legend()
     st.pyplot(plt)
 
-# Classification Tab
-with kategori[1]:
-    # Load the KNN model
-    model_url = 'https://github.com/davata1/Project-ML/raw/main/knn_model.pkl'  # Use the raw link
-    model = pickle.load(open('knn_model.pkl', 'rb'))  # Load the model from a local file
-
-    classes = ["_BrownSpot", "_Hispa", "_LeafBlast", "_Healthy"]
-    
-    # Menu pilihan
-    menu = st.selectbox("Capture Option:", ["Upload Photo", "Camera"])
-
-    if menu == "Upload Photo":
-        uploaded_file = st.file_uploader("Select photo", type=['png', 'jpg', 'jpeg'])
-        if uploaded_file is not None:
-            image = Image.open(uploaded_file)
-            st.image(image, caption='Uploaded Photo', use_column_width=True)
-            # Mengubah gambar menjadi bentuk yang sesuai untuk prediksi
-            resized_image = image.resize((128, 128))
-                        # Normalize the image
-            processed_image = np.array(resized_image) / 255.0
-            input_image = np.expand_dims(processed_image, axis=0)
-
-            # Melakukan prediksi menggunakan model
-            prediction = model.predict(input_image)
-            class_index = np.argmax(prediction[0])
-            class_name = classes[class_index]
-
-            # Menampilkan hasil prediksi
-            st.success(f"Hasil Prediksi: {class_name}")
-
-# Optional: Add a section to display the model's performance metrics if available
-# You can load the metrics from a file or calculate them based on a test dataset
