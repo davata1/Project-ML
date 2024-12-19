@@ -27,7 +27,7 @@ with kategori[0]:
     plt.figure(figsize=(12, 6))
     for prov in df['Provinsi'].unique():
         province_data = df[df['Provinsi'] == prov]
-        plt.plot(label=prov,province_data['Tahun'], province_data['Produksi'], marker='o')
+        plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o',label=prov)
 
     plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
