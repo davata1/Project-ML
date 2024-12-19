@@ -82,9 +82,5 @@ with kategori[0]:
         for tahun in tahun_prediksi_list:
             plt.plot([tahun], [prediksi[(prov, tahun)]], 'ro')  # Titik merah untuk prediksi
 
-    plt.xlabel('Tahun')
-    plt.ylabel('Produksi Cabe')
-    plt.title('Perbandingan Produksi Cabe per Daerah')
-    plt.legend()
-    st.pyplot(plt)
+ 
 
