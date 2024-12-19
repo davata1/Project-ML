@@ -33,14 +33,8 @@ with kategori[0]:
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
     plt.legend()
-    
-    # Mengatur posisi label provinsi ke kiri
-    plt.xticks(rotation=10, ha='left')  # Rotasi label dan posisikan ke kiri
-    plt.subplots_adjust(bottom=0.2)  # Menambahkan ruang di bawah grafik
-
-    plt.xlim(left=-1)  # Mengatur batas sumbu x agar label provinsi terlihat
-
     st.pyplot(plt)
+    plt.xlim(left=-1)  # Mengatur batas sumbu x agar label provinsi terlihat
 
 # Classification Tab
 with kategori[1]:
