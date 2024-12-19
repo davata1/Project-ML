@@ -29,13 +29,13 @@ with kategori[0]:
         province_data = df[df['Provinsi'] == prov]
         plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
 
-    plt.xlabel('Tahun',loc='left')
+    plt.xlabel('Tahun')
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
     plt.legend()
     
     # Mengatur posisi label provinsi ke kiri
-    plt.xticks(rotation=10, ha='right')  # Rotasi label dan posisikan ke kanan
+    plt.xticks(rotation=10, ha='left')  # Rotasi label dan posisikan ke kanan
     plt.subplots_adjust(bottom=0.2)  # Menambahkan ruang di bawah grafik
 
     st.pyplot(plt)
