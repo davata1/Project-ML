@@ -23,17 +23,18 @@ kategori = st.tabs(["Prediksi", "Klasifikasi"])
 with kategori[0]:
     st.subheader("Grafik Produksi Cabe per Provinsi")
     
-   # Plot data produksi per provinsi
-plt.figure(figsize=(12, 6))
-for prov in df['Provinsi'].unique():
-    province_data = df[df['Provinsi'] == prov]
-    plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
+    # Plot data produksi per provinsi
+    plt.figure(figsize=(12, 6))
+    for prov in df['Provinsi'].unique():
+        province_data = df[df['Provinsi'] == prov]
+        plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
 
-plt.xlabel('Tahun')
-plt.ylabel('Produksi Cabe')
-plt.title('Perbandingan Produksi Cabe per Daerah')
-plt.legend()
-st.pyplot(plt dalam code ini label=prov pindah ke kiri
+    plt.xlabel('Tahun')
+    plt.ylabel('Produksi Cabe')
+    plt.title('Perbandingan Produksi Cabe per Daerah')
+    plt.legend()
+    st.pyplot(plt)
+
 
 
 # Classification Tab
