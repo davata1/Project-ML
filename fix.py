@@ -29,7 +29,7 @@ with kategori[0]:
         province_data = df[df['Provinsi'] == prov]
         plt.plot(province_data['Tahun'], province_data['Produksi'], marker='o', label=prov)
 
-    plt.xlabel('Tahun' loc='left')
+    plt.xlabel('Tahun',loc='left')
     plt.ylabel('Produksi Cabe')
     plt.title('Perbandingan Produksi Cabe per Daerah')
     plt.legend()
