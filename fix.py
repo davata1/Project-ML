@@ -83,5 +83,13 @@ with kategori[0]:
         for tahun in tahun_prediksi_list:
             plt.plot([tahun], [prediksi[(prov, tahun)]], 'ro')  # Titik merah untuk prediksi
 
+        # Visualisasi Produksi per Provinsi
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x=df['Provinsi'], y=df['Produksi'])
+    plt.xlabel('Provinsi')
+    plt.xticks(rotation=90)
+    plt.ylabel('Produksi')
+    plt.title('Produksi Cabai per Provinsi dari Tahun 2003-2023')
+
  
 
