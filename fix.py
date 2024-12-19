@@ -30,6 +30,9 @@ with kategori[0]:
     # Daftar tahun yang ingin diprediksi
     tahun_prediksi_list = [2024, 2025, 2026]
 
+    # Create a figure for the plot
+    plt.figure(figsize=(12, 6))
+
     # Loop through each province to train the model and make predictions
     for prov in df['Provinsi'].unique():
         # Ambil data untuk provinsi tertentu
