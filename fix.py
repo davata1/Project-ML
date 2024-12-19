@@ -90,6 +90,6 @@ with kategori[0]:
     plt.xticks(rotation=90)
     plt.ylabel('Produksi')
     plt.title('Produksi Cabai per Provinsi dari Tahun 2003-2023')
-
+    st.pyplot(plt)
  
 
