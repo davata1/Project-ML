@@ -38,13 +38,6 @@ with kategori[0]:
     plt.xticks(rotation=10, ha='left')  # Rotasi label dan posisikan ke kiri
     plt.subplots_adjust(bottom=0.2)  # Menambahkan ruang di bawah grafik
 
-    # Menambahkan label provinsi di sebelah kiri
-    for i, prov in enumerate(df['Provinsi'].unique()):
-        # Mengambil data produksi untuk provinsi tertentu
-        province_data = df[df['Provinsi'] == prov]
-        # Menambahkan teks di sebelah kiri grafik
-        plt.text(-0.5, province_data['Produksi'].iloc[-1], prov, fontsize=10, ha='right')
-
     plt.xlim(left=-1)  # Mengatur batas sumbu x agar label provinsi terlihat
 
     st.pyplot(plt)
