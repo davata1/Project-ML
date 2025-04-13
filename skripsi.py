@@ -319,3 +319,31 @@ def main():
                     'Makanan': '#fecdd3',  # pink
                     'Layanan': '#fde68a',  # kuning
                     'Tempat': '#a7f3d0',   # hijau
+                    'Harga': '#e9d5ff',    # ungu
+                    'Lainnya': '#e5e7eb'   # abu-abu
+                }
+                
+                sentimen_warna = {
+                    'Positif': '#93c5fd',  # biru
+                    'Negatif': '#fca5a5'   # merah
+                }
+                
+                for i in range(len(pred)):
+                    indeks_positif = np.where(pred[i] == 1)[0]
+                    if len(indeks_positif) == 0:
+                        st.write("Tidak ada aspek dan sentimen yang terdeteksi dalam ulasan ini.")
+                    else:
+                        fitur_positif = [nama_fitur[idx] for idx in indeks_positif]
+                        fitur_positif_str = [
+                            f"Aspek: <span style='background-color: {aspek_warna[fitur[0]]}; border-radius:5px; padding: 2px 4px; font-weight: 600;'>{fitur[0]}</span> "
+                            f"Sentimen: <span style='background-color: {sentimen_warna[fitur[1]]}; border-radius:5px; padding: 2px 4px; font-weight: 600;'>{fitur[1]}</span> "
+                            for fitur in fitur_positif
+                        ]
+                        st.markdown("<br>".join(fitur_positif_str), unsafe_allow_html=True)
+                        
+            except Exception as e:
+                st.error(f"Terjadi kesalahan dalam pemrosesan: {str(e)}")
+                st.error(f"Detail: {type(e).__name__}")
+
+if __name__ == "__main__":
+    main()
