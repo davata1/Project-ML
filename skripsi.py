@@ -40,7 +40,7 @@ with st.container():
     def tokenize (text):
       return nltk.word_tokenize(text)
 
-    kamus_normalisasi = pd.read_csv('colloquial-indonesian-lexicon.csv')
+    kamus_normalisasi = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/colloquial-indonesian-lexicon.csv')
     kamus_normalisasi = kamus_normalisasi.drop(columns=['In-dictionary','context','category1','category2', 'category3'])
 
     def normalization(token):
