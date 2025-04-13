@@ -23,7 +23,7 @@ with st.container():
   if submit:
     df_mentah = pd.DataFrame({'Ulasan': [input]})
 
-    data = pd.read_excel('https://github.com/davata1/Project-ML/blob/main/data%20fix.xlsx')
+    data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/heads/main/data%20fix.xlsx')
 
     def case_fold(text):
       return text.lower()
