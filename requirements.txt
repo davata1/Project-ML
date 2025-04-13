@@ -5,7 +5,7 @@ streamlit==1.44.1
 seaborn==0.13.2
 matplotlib==3.10.1
 keras==3.9.2
-opencv-python==4.11.0860
+opencv-python==4.11.0.86
 nltk==3.9.1
 Sastrawi==1.0.1
 iterstrat==0.1.9
