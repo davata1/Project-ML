@@ -1,4 +1,3 @@
-import pickle
 import pandas as pd
 import numpy as np
 import re
@@ -7,9 +6,10 @@ import nltk
 import streamlit as st
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from sklearn.feature_extraction.text import TfidfVectorizer
-import os
-import requests
-from io import BytesIO
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.svm import SVC
+import warnings
+warnings.filterwarnings('ignore')
 
 # Ensure NLTK resources are available
 try:
@@ -23,27 +23,6 @@ except LookupError:
     nltk.download('stopwords')
 
 from nltk.corpus import stopwords
-
-# Load model function with error handling
-@st.cache_resource
-def load_pickle_model():
-    try:
-        # First try to load local model
-        if os.path.exists('model_clf.pkl'):
-            with open('model_clf.pkl', 'rb') as r:
-                return pickle.load(r)
-        else:
-            # If not available locally, try to download
-            model_url = "https://github.com/davata1/Project-ML/raw/main/model_clf.pkl"
-            response = requests.get(model_url)
-            if response.status_code == 200:
-                return pickle.loads(response.content)
-            else:
-                st.error("Failed to load model from GitHub. Please check your internet connection.")
-                return None
-    except Exception as e:
-        st.error(f"Error loading model: {str(e)}")
-        return None
 
 # Load data function with error handling
 @st.cache_data
@@ -109,10 +88,79 @@ def remove_stopword(ulasan):
             result.append(word)
     return result
 
+# Train model function
+@st.cache_resource
+def train_model(X_train, y_train):
+    try:
+        with st.spinner('Training model... Please wait...'):
+            # Create and train the model
+            svm = SVC(kernel='linear', probability=True)
+            model = MultiOutputClassifier(svm)
+            model.fit(X_train, y_train)
+            return model
+    except Exception as e:
+        st.error(f"Error training model: {str(e)}")
+        return None
+
 # Main application
 def main():
     with st.container():
         st.title('Aplikasi Analisis Sentimen Berbasis Aspek :red[Ulasan Rumah Makan Bebek Sinjay]')
+        
+        # Show data loading progress
+        with st.spinner('Loading data and preparing model...'):
+            # Load data and resources
+            data = load_data()
+            kamus_normalisasi = load_normalization_dict()
+            
+            if data is None or kamus_normalisasi is None:
+                st.error("Failed to load necessary resources. Please check your internet connection.")
+                return
+            
+            # Process training data
+            st.session_state.loading_status = st.empty()
+            
+            if 'data_processed' not in st.session_state:
+                st.session_state.loading_status.info("Processing training data...")
+                
+                data['case_folding'] = data['ulasan'].apply(case_fold)
+                data['clean'] = data['case_folding'].apply(remove_punctuation)
+                data['tokenisasi'] = data['clean'].apply(tokenize)
+                data['normal'] = data['tokenisasi'].apply(lambda x: normalization(x, kamus_normalisasi))
+                data['stemming'] = data['normal'].apply(stemming)
+                data['stopword'] = data['stemming'].apply(remove_stopword)
+                data['final'] = data['stopword'].apply(lambda tokens: ' '.join(tokens))
+                
+                X = data['final'].values.tolist()
+                y = np.asarray(data[data.columns[1:11]])
+                
+                # Vectorize training data
+                st.session_state.loading_status.info("Vectorizing data...")
+                vectorizer = TfidfVectorizer(max_features=2500, max_df=0.9)
+                tfidf_vectors = vectorizer.fit_transform(X)
+                X_train = tfidf_vectors.toarray()
+                
+                # Store in session state
+                st.session_state.data = data
+                st.session_state.vectorizer = vectorizer
+                st.session_state.X_train = X_train
+                st.session_state.y_train = y
+                st.session_state.data_processed = True
+                
+                # Train model
+                st.session_state.loading_status.info("Training model... This might take a few minutes...")
+                model = train_model(X_train, y)
+                st.session_state.model = model
+                
+                if model is not None:
+                    st.session_state.loading_status.success("Model ready!")
+                else:
+                    st.session_state.loading_status.error("Failed to train model.")
+                    return
+            else:
+                # Use stored data and model
+                st.session_state.loading_status.success("Model ready!")
+        
         input_text = st.text_area("**Masukkan Ulasan**")
         submit = st.button("Proses", type="primary")
 
@@ -125,32 +173,6 @@ def main():
                 # Create dataframe from input
                 df_mentah = pd.DataFrame({'Ulasan': [input_text]})
                 
-                # Load data and resources
-                data = load_data()
-                kamus_normalisasi = load_normalization_dict()
-                model = load_pickle_model()
-                
-                if data is None or kamus_normalisasi is None or model is None:
-                    return
-                    
-                # Process training data
-                data['case_folding'] = data['ulasan'].apply(case_fold)
-                data['clean'] = data['case_folding'].apply(remove_punctuation)
-                data['tokenisasi'] = data['clean'].apply(tokenize)
-                data['normal'] = data['tokenisasi'].apply(lambda x: normalization(x, kamus_normalisasi))
-                data['stemming'] = data['normal'].apply(stemming)
-                data['stopword'] = data['stemming'].apply(remove_stopword)
-                data['final'] = data['stopword'].apply(lambda tokens: ' '.join(tokens))
-
-                X = data['final'].values.tolist()
-                
-                # Vectorize training data
-                vectorizer = TfidfVectorizer(max_features=2500, max_df=0.9)
-                tfidf_vectors = vectorizer.fit_transform(X)
-                tf_idf_array = tfidf_vectors.toarray()
-                corpus = vectorizer.get_feature_names_out()
-                hasil_tfidf = pd.DataFrame(tf_idf_array, columns=corpus)
-                
                 # Process input data
                 df_mentah['case_folding'] = df_mentah['Ulasan'].apply(case_fold)
                 df_mentah['clean'] = df_mentah['case_folding'].apply(remove_punctuation)
@@ -161,10 +183,12 @@ def main():
                 df_mentah['final'] = df_mentah['stopword'].apply(lambda tokens: ' '.join(tokens))
                 
                 # Transform input
+                vectorizer = st.session_state.vectorizer
                 transform = vectorizer.transform(df_mentah['final'])
                 transform_dense = np.asarray(transform.todense())
                 
                 # Make prediction
+                model = st.session_state.model
                 pred = model.predict(transform_dense)
                 
                 # Display results
