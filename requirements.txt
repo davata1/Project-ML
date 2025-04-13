@@ -6,5 +6,6 @@ seaborn==0.13.2
 matplotlib==3.10.0
 keras==3.7.0
 opencv-python==4.8.1.78
-
-
+nltk==3.8.1
+Sastrawi==1.0.1
+iterstrat==0.1.1
