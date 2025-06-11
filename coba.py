@@ -7,7 +7,7 @@ from io import BytesIO
 # Method 1: Direct pandas read_excel (original method)
 st.write("=== Method 1: Direct pandas read_excel ===")
 try:
-    data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/heads/main/sinjaymadura.xlsx')
+    data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/main/sinjaymadura.xlsx')
     st.write("✅ Berhasil memuat dengan pandas direct")
     st.write("DataFrame shape:", data.shape)
     st.write("DataFrame columns:", data.columns.tolist())
