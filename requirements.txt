@@ -10,4 +10,4 @@ nltk==3.9.1
 Sastrawi==1.0.1
 iterative-stratification==0.1.9
 openpyxl==3.1.5
-
+xgboost==3.0.2
