@@ -84,20 +84,41 @@ with st.container():
         data['stopword'] = data['stemming'].apply(remove_stopword)
         data['final'] = data['stopword'].apply(lambda tokens: ' '.join(tokens))
 
-        # Siapkan data untuk training (menggunakan pendekatan XGBoost)
+        # Siapkan data untuk training
         X = data['final'].values.tolist()
         
-        # Asumsikan label ada di kolom 1-10 seperti code asli
-        # PERBAIKAN: Konversi tipe data dan pastikan format yang benar
-        y_raw = data[data.columns[1:11]].values
+        # Konversi label powerset menggunakan MultiLabelBinarizer
+        st.write("**Mengkonversi Label Powerset dengan MultiLabelBinarizer...**")
         
-        # Konversi ke integer dan pastikan dalam format yang benar untuk scikit-multilearn
-        y = y_raw.astype(np.int32)
+        # Cek struktur data
+        st.write(f"Kolom data: {data.columns.tolist()}")
+        st.write(f"Sample label powerset: {data.iloc[:5, 1].tolist()}")
         
-        # Pastikan tidak ada nilai yang hilang
-        if np.any(pd.isna(y)):
-            st.error("Terdapat nilai yang hilang dalam data label. Silakan periksa data Anda.")
-            st.stop()
+        # Split label jadi list (sama seperti di Google Colab)
+        data['label_split'] = data.iloc[:, 1].apply(lambda x: str(x).split(',') if pd.notna(x) and x != '' else [])
+        
+        # Bersihkan whitespace
+        data['label_split'] = data['label_split'].apply(lambda x: [label.strip() for label in x if label.strip()])
+        
+        # MultiLabelBinarizer
+        mlb = MultiLabelBinarizer()
+        y = mlb.fit_transform(data['label_split'])
+        
+        st.success(f"Konversi berhasil! Shape label: {y.shape}")
+        st.write(f"Classes yang ditemukan: {mlb.classes_}")
+        st.write(f"Jumlah classes: {len(mlb.classes_)}")
+        st.write(f"Distribusi label (jumlah 1 per kolom): {np.sum(y, axis=0)}")
+        
+        # Tampilkan contoh hasil konversi
+        st.write("**Contoh Hasil Konversi:**")
+        for i in range(min(3, len(data))):
+            original_label = data.iloc[i, 1]
+            label_list = data['label_split'].iloc[i]
+            binary_result = y[i]
+            st.write(f"- '{original_label}' → {label_list} → {binary_result}")
+        
+        # Simpan mlb untuk digunakan nanti dalam prediksi (opsional)
+        # Ini berguna jika ingin menampilkan nama label hasil prediksi
 
         # TF-IDF Vectorization
         vectorizer = TfidfVectorizer(max_features=2500, max_df=0.9)
@@ -151,38 +172,49 @@ with st.container():
 
         st.write("**Aspek dan sentimen yang terkandung dalam ulasan**")
         
-        nama_fitur = [['Makanan', 'Positif'], ['Makanan', 'Negatif'], ['Layanan', 'Positif'], ['Layanan', 'Negatif'], ['Tempat', 'Positif'], ['Tempat', 'Negatif'], ['Harga', 'Positif'], ['Harga', 'Negatif'], ['Lainnya', 'Positif'], ['Lainnya', 'Negatif']]
-
+        # Menggunakan classes dari MultiLabelBinarizer
+        classes = mlb.classes_
+        
         # Dictionary untuk warna background berdasarkan aspek
         aspek_warna = {
-            'Makanan': '#fecdd3',  # pink
-            'Layanan': '#fde68a',  # kuning
-            'Tempat': '#a7f3d0',   # hijau
-            'Harga': '#e9d5ff',    # ungu
-            'Lainnya': '#e5e7eb'   # abu-abu
-        }
-
-        sentimen_warna = {
-            'Positif': '#93c5fd',  # biru
-            'Negatif': '#fca5a5'   # merah
+            'makanan positif': '#fecdd3',    # pink
+            'makanan negatif': '#fca5a5',    # merah muda
+            'layanan positif': '#fde68a',    # kuning
+            'layanan negatif': '#f59e0b',    # orange
+            'pelayanan positif': '#fde68a',  # kuning (alias layanan)
+            'pelayanan negatif': '#f59e0b',  # orange (alias layanan)
+            'tempat positif': '#a7f3d0',     # hijau
+            'tempat negatif': '#10b981',     # hijau tua
+            'harga positif': '#e9d5ff',      # ungu
+            'harga negatif': '#8b5cf6',      # ungu tua
+            'lainnya positif': '#e5e7eb',    # abu-abu
+            'lainnya negatif': '#6b7280'     # abu-abu tua
         }
 
         for i in range(len(pred)):
-            # PERBAIKAN: Pastikan pred dalam format yang benar
+            # Pastikan pred dalam format yang benar
             if hasattr(pred, 'toarray'):
                 pred_array = pred.toarray()
             else:
                 pred_array = pred
                 
             indeks_positif = np.where(pred_array[i] == 1)[0]
-            fitur_positif = [nama_fitur[idx] for idx in indeks_positif]
             
-            if len(fitur_positif) > 0:
-                fitur_positif_str = [
-                    f"Aspek: <span style='background-color: {aspek_warna[fitur[0]]}; border-radius:5px; padding: 2px 4px; font-weight: 600;'>{fitur[0]}</span> "
-                    f"Sentimen: <span style='background-color: {sentimen_warna[fitur[1]]}; border-radius:5px; padding: 2px 4px; font-weight: 600;'>{fitur[1]}</span>"
-                    for fitur in fitur_positif
-                ]
-                st.markdown("<br>".join(fitur_positif_str), unsafe_allow_html=True)
+            if len(indeks_positif) > 0:
+                fitur_positif_str = []
+                for idx in indeks_positif:
+                    if idx < len(classes):
+                        label_name = classes[idx]
+                        # Tentukan warna berdasarkan label
+                        warna = aspek_warna.get(label_name, '#e5e7eb')  # default abu-abu
+                        
+                        fitur_positif_str.append(
+                            f"<span style='background-color: {warna}; border-radius:5px; padding: 4px 8px; margin: 2px; font-weight: 600; display: inline-block;'>{label_name}</span>"
+                        )
+                
+                if fitur_positif_str:
+                    st.markdown(" ".join(fitur_positif_str), unsafe_allow_html=True)
+                else:
+                    st.write("Tidak ada aspek atau sentimen yang terdeteksi dalam ulasan ini.")
             else:
                 st.write("Tidak ada aspek atau sentimen yang terdeteksi dalam ulasan ini.")
