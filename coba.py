@@ -5,6 +5,7 @@ import re
 import string
 import nltk
 nltk.download('punkt')
+nltk.download('punkt_tab')
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from nltk.corpus import stopwords
 nltk.download('stopwords')
