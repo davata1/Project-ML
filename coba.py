@@ -23,7 +23,7 @@ import joblib
 
 # Memuat data dari file Excel
 data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/heads/main/sinjaymadura.xlsx')
-
+data
 # Cek apakah DataFrame tidak kosong
 if not data.empty:
     st.write("DataFrame shape:", data.shape)
