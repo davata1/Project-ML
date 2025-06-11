@@ -1,5 +1,5 @@
 # Memuat data dari file Excel
-data = pd.read_excel('https://raw.githubusercontent.com/davata1/Project-ML/main/sinjaymadura.xlsx')
+data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/heads/main/sinjaymadura.xlsx
 
 # Cek apakah DataFrame tidak kosong
 if not data.empty:
