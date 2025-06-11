@@ -22,8 +22,8 @@ from sklearn.metrics import classification_report, hamming_loss, f1_score
 import joblib
 
 # Memuat data dari file Excel
-data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/heads/main/sinjaymadura.xlsx')
-data
+data = pd.read_excel('https://raw.githubusercontent.com/davata1/Project-ML/main/sinjaymadura.xlsx')
+
 # Cek apakah DataFrame tidak kosong
 if not data.empty:
     st.write("DataFrame shape:", data.shape)
@@ -32,6 +32,6 @@ if not data.empty:
 else:
     st.error("DataFrame kosong. Pastikan data berhasil dimuat.")
 
- kamus_normalisasi = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/colloquial-indonesian-lexicon.csv')
- kamus_normalisasi = kamus_normalisasi.drop(columns=['In-dictionary', 'context', 'category1', 'category2', 'category3'])
- kamus_normalisasi
+# Memuat kamus normalisasi
+kamus_normalisasi = pd.read_csv('https://raw.githubusercontent.com/davata1/Project-ML/main/colloquial-indonesian-lexicon.csv')
+kamus_normalisasi = kamus_normalisasi.drop(columns=['In-dictionary', 'context', 'category1', 'category2', 'category3'])
