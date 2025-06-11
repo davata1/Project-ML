@@ -22,59 +22,60 @@ from sklearn.metrics import classification_report, hamming_loss, f1_score
 import joblib
 
 with st.container():
-  st.title('Aplikasi Analisis Sentimen Berbasis Aspek :red[Ulasan Rumah Makan Bebek Sinjay]')
-  input = st.text_area("**Masukkan Ulasan**")
-  submit = st.button("Proses", type="primary")
+    st.title('Aplikasi Analisis Sentimen Berbasis Aspek :red[Ulasan Rumah Makan Bebek Sinjay]')
+    input = st.text_area("**Masukkan Ulasan**")
+    submit = st.button("Proses", type="primary")
 
-  if submit:
-    df_mentah = pd.DataFrame({'Ulasan': [input]})
+    if submit:
+        df_mentah = pd.DataFrame({'Ulasan': [input]})
 
-    data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/heads/main/sinjaymadura.xlsx')
+        data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/heads/main/sinjaymadura.xlsx')
 
-    def case_fold(text):
-      return text.lower()
+        def case_fold(text):
+            return text.lower()
 
-    def remove_punctuation(text):
-      data=re.sub('@[^\s]+', ' ', text)
-      data = re.sub(r'http\S*', ' ', data)
-      data=data.translate(str.maketrans(' ',' ',string.punctuation))
-      data=re.sub('[^a-zA-Z]',' ',data)
-      data=re.sub("\n"," ",data)
-      data=re.sub(r"\b[a-zA-z]\b"," ",data)
-      return data
+        def remove_punctuation(text):
+            data = re.sub('@[^\s]+', ' ', text)
+            data = re.sub(r'http\S*', ' ', data)
+            data = data.translate(str.maketrans(' ', ' ', string.punctuation))
+            data = re.sub('[^a-zA-Z]', ' ', data)
+            data = re.sub("\n", " ", data)
+            data = re.sub(r"\b[a-zA-z]\b", " ", data)
+            return data
 
-    def tokenize (text):
-      return nltk.word_tokenize(text)
+        def tokenize(text):
+            return nltk.word_tokenize(text)
 
-    kamus_normalisasi = pd.read_csv('colloquial-indonesian-lexicon.csv')
-    kamus_normalisasi = kamus_normalisasi.drop(columns=['In-dictionary','context','category1','category2', 'category3'])
+        kamus_normalisasi = pd.read_csv('colloquial-indonesian-lexicon.csv')
+        kamus_normalisasi = kamus_normalisasi.drop(columns=['In-dictionary', 'context', 'category1', 'category2', 'category3'])
 
-    def normalization(token):
-        ulasan_normalisasi = []
-        for kata in token:
-            if kata in kamus_normalisasi['slang'].values:
-                formal = kamus_normalisasi.loc[kamus_normalisasi['slang'] == kata, 'formal'].values[0]
-                ulasan_normalisasi.append(formal)
-            else:
-                ulasan_normalisasi.append(kata)
-        return ulasan_normalisasi
+        def normalization(token):
+            ulasan_normalisasi = []
+            for kata in token:
+                if kata in kamus_normalisasi['slang'].values:
+                    formal = kamus_normalisasi.loc[kamus_normalisasi['slang'] == kata, 'formal'].values[0]
+                    ulasan_normalisasi.append(formal)
+                else:
+                    ulasan_normalisasi.append(kata)
+            return ulasan_normalisasi
 
-    Fact = StemmerFactory()
-    Stemmer = Fact.create_stemmer()
-    def stemming(ulasan):
-      result = []
-      for word in ulasan:
-        result.append(Stemmer.stem(word))
-      return result
+        Fact = StemmerFactory()
+        Stemmer = Fact.create_stemmer()
+        
+        def stemming(ulasan):
+            result = []
+            for word in ulasan:
+                result.append(Stemmer.stem(word))
+            return result
 
-    def remove_stopword(ulasan):
-      result = []
-      for word in ulasan:
-        if word not in stopwords.words('indonesian'):
-          result.append(word)
-      return result
+        def remove_stopword(ulasan):
+            result = []
+            for word in ulasan:
+                if word not in stopwords.words('indonesian'):
+                    result.append(word)
+            return result
 
-    # Preprocessing data training
+        # Preprocessing data training
         data['case_folding'] = data['ulasan'].apply(case_fold)
         data['clean'] = data['case_folding'].apply(remove_punctuation)
         data['tokenisasi'] = data['clean'].apply(tokenize)
