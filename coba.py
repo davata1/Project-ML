@@ -23,7 +23,7 @@ import joblib
 
 # Memuat data dari file Excel
 data = pd.read_excel('https://raw.githubusercontent.com/davata1/Project-ML/main/sinjaymadura.xlsx')
-
+data
 # Cek apakah DataFrame tidak kosong
 if not data.empty:
     st.write("DataFrame shape:", data.shape)
@@ -35,3 +35,4 @@ else:
 # Memuat kamus normalisasi
 kamus_normalisasi = pd.read_csv('https://raw.githubusercontent.com/davata1/Project-ML/main/colloquial-indonesian-lexicon.csv')
 kamus_normalisasi = kamus_normalisasi.drop(columns=['In-dictionary', 'context', 'category1', 'category2', 'category3'])
+kamus_normalisasi
