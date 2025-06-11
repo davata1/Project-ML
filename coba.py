@@ -1,24 +1,33 @@
+import pickle
 import pandas as pd
-import requests
-from io import BytesIO
+import numpy as np
+import re
+import string
+import nltk
+import streamlit as st
 
-# URL file Excel di GitHub
-url = 'https://github.com/davata1/Project-ML/raw/refs/heads/main/sinjaymadura.xlsx'
+# Download NLTK data seperti di Google Colab
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk.download('stopwords')
 
-# Mengunduh file dari URL
-response = requests.get(url)
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from xgboost import XGBClassifier
+from skmultilearn.problem_transform import LabelPowerset
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.metrics import classification_report, hamming_loss, f1_score
+import joblib
 
-# Cek apakah unduhan berhasil
-if response.status_code == 200:
-    # Membaca file Excel dari response content
-    data = pd.read_excel(BytesIO(response.content))
+# Memuat data dari file Excel
+data = pd.read_excel('https://github.com/davata1/Project-ML/raw/refs/heads/main/sinjaymadura.xlsx')
 
-    # Cek apakah DataFrame tidak kosong
-    if not data.empty:
-        st.write("DataFrame shape:", data.shape)
-        st.write("DataFrame columns:", data.columns.tolist())
-        st.write(f"Sample label powerset: {data.iloc[:5, 1].tolist()}")
-    else:
-        st.error("DataFrame kosong. Pastikan data berhasil dimuat.")
+# Cek apakah DataFrame tidak kosong
+if not data.empty:
+    st.write("DataFrame shape:", data.shape)
+    st.write("DataFrame columns:", data.columns.tolist())
+    st.write(f"Sample label powerset: {data.iloc[:5, 1].tolist()}")
 else:
-    st.error("Gagal mengunduh file. Periksa URL atau koneksi.")
+    st.error("DataFrame kosong. Pastikan data berhasil dimuat.")
