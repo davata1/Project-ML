@@ -31,3 +31,7 @@ if not data.empty:
     st.write(f"Sample label powerset: {data.iloc[:5, 1].tolist()}")
 else:
     st.error("DataFrame kosong. Pastikan data berhasil dimuat.")
+
+ kamus_normalisasi = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/colloquial-indonesian-lexicon.csv')
+ kamus_normalisasi = kamus_normalisasi.drop(columns=['In-dictionary', 'context', 'category1', 'category2', 'category3'])
+ kamus_normalisasi
