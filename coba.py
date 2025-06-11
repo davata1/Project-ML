@@ -46,7 +46,7 @@ with st.container():
         def tokenize(text):
             return nltk.word_tokenize(text)
 
-        kamus_normalisasi = pd.read_csv('colloquial-indonesian-lexicon.csv')
+        kamus_normalisasi = pd.read_csv('https://github.com/davata1/Project-ML/raw/refs/heads/main/colloquial-indonesian-lexicon.csv')
         kamus_normalisasi = kamus_normalisasi.drop(columns=['In-dictionary', 'context', 'category1', 'category2', 'category3'])
 
         def normalization(token):
@@ -88,7 +88,16 @@ with st.container():
         X = data['final'].values.tolist()
         
         # Asumsikan label ada di kolom 1-10 seperti code asli
-        y = np.asarray(data[data.columns[1:11]])
+        # PERBAIKAN: Konversi tipe data dan pastikan format yang benar
+        y_raw = data[data.columns[1:11]].values
+        
+        # Konversi ke integer dan pastikan dalam format yang benar untuk scikit-multilearn
+        y = y_raw.astype(np.int32)
+        
+        # Pastikan tidak ada nilai yang hilang
+        if np.any(pd.isna(y)):
+            st.error("Terdapat nilai yang hilang dalam data label. Silakan periksa data Anda.")
+            st.stop()
 
         # TF-IDF Vectorization
         vectorizer = TfidfVectorizer(max_features=2500, max_df=0.9)
@@ -96,6 +105,10 @@ with st.container():
         
         # Split data untuk training
         X_train, X_test, y_train, y_test = train_test_split(X_tfidf, y, test_size=0.20, random_state=42)
+        
+        # PERBAIKAN: Pastikan y_train dalam format yang benar
+        y_train = y_train.astype(np.int32)
+        y_test = y_test.astype(np.int32)
         
         # Model XGBoost dengan skenario terbaik (skenario 1)
         model = LabelPowerset(
@@ -110,8 +123,12 @@ with st.container():
             )
         )
         
-        # Training model
-        model.fit(X_train, y_train)
+        # Training model dengan error handling
+        try:
+            model.fit(X_train, y_train)
+        except Exception as e:
+            st.error(f"Error dalam training model: {str(e)}")
+            st.stop()
 
         # Preprocessing input user
         df_mentah['case_folding'] = df_mentah['Ulasan'].apply(case_fold)
@@ -126,7 +143,11 @@ with st.container():
         transform = vectorizer.transform(df_mentah['final'])
 
         # Prediksi menggunakan XGBoost model
-        pred = model.predict(transform)
+        try:
+            pred = model.predict(transform)
+        except Exception as e:
+            st.error(f"Error dalam prediksi: {str(e)}")
+            st.stop()
 
         st.write("**Aspek dan sentimen yang terkandung dalam ulasan**")
         
@@ -147,7 +168,13 @@ with st.container():
         }
 
         for i in range(len(pred)):
-            indeks_positif = np.where(pred[i] == 1)[0]
+            # PERBAIKAN: Pastikan pred dalam format yang benar
+            if hasattr(pred, 'toarray'):
+                pred_array = pred.toarray()
+            else:
+                pred_array = pred
+                
+            indeks_positif = np.where(pred_array[i] == 1)[0]
             fitur_positif = [nama_fitur[idx] for idx in indeks_positif]
             
             if len(fitur_positif) > 0:
